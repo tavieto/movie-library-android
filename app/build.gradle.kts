@@ -18,9 +18,24 @@ android {
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    flavorDimensions.add("version")
+
+    productFlavors {
+        create("prod") {
+            dimension = "version"
+        }
+        create("dev") {
+            dimension = "version"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
+    }
 }
 
 dependencies {
+    implementation(project(":core:navigation"))
+
     implementation(libs.androidx.core.ktx)
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -3,19 +3,6 @@ android {
 
     defaultConfig.vectorDrawables.useSupportLibrary = true
 
-    flavorDimensions "version"
-
-    productFlavors {
-        prod {
-            dimension "version"
-        }
-        dev {
-            dimension "version"
-            applicationIdSuffix ".dev"
-            versionNameSuffix  "-dev"
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled true
