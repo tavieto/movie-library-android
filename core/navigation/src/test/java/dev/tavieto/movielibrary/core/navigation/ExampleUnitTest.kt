@@ -1,4 +1,4 @@
-package dev.tavieto.movielibrary.navigation
+package dev.tavieto.movielibrary.core.navigation
 
 import org.junit.Test
 
