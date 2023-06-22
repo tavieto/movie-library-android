@@ -1,18 +1,24 @@
 plugins {
     id("dev.tavieto.android.library")
+    id("dev.tavieto.android.compose")
 }
 
 android.namespace = "dev.tavieto.movielibrary.core.navigation"
 
 dependencies {
-    // compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.foundation)
+    implementation(project(":core:commons"))
+
+    // project features
+    implementation(project(":feature:main"))
+    implementation(project(":feature:auth"))
 
     // navigation
-    implementation(libs.accompanist.navigation)
-    implementation(libs.androidx.navigation.common.ktx)
+    api(libs.androidx.navigation)
+    api(libs.androidx.navigation.common.ktx)
 
     // dependency injection
     implementation(libs.koin.androidx.compose)
+
+    // gson
+    implementation(libs.gson)
 }

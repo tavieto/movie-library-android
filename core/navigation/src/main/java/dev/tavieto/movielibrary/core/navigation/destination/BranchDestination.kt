@@ -1,8 +1,8 @@
-package dev.tavieto.movielibrary.core.navigation
+package dev.tavieto.movielibrary.core.navigation.destination
 
 sealed class BranchDestination(private val name: String) {
     val route = "${name}_branch"
 
     object Auth : BranchDestination(name = "auth")
-    object Home : BranchDestination(name = "home")
+    object Main : BranchDestination(name = "main")
 }
