@@ -10,7 +10,14 @@ apply {
 
 android {
     namespace = "dev.tavieto.movielibrary.app"
-    defaultConfig.applicationId = "dev.tavieto.movielibrary.app"
+    defaultConfig {
+        applicationId = "dev.tavieto.movielibrary.app"
+        minSdk = 24
+        targetSdk = 33
+        versionCode = 1
+        versionName = "1.0.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {

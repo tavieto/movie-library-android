@@ -12,7 +12,6 @@ internal fun Project.configureAndroidDefaultSettings(
         defaultConfig {
             minSdk = 24
 
-            vectorDrawables.useSupportLibrary = true
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
 
