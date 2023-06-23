@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("dev.tavieto.android.compose")
+    id("com.google.gms.google-services")
 }
 
 apply {
@@ -35,12 +36,17 @@ android {
 
 dependencies {
     implementation(project(":core:navigation"))
+    implementation(project(":domain:auth"))
 
     implementation(libs.androidx.core.ktx)
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.koin.android)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.firebase.perf.ktx)
 
     testImplementation(libs.junit)
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.5'

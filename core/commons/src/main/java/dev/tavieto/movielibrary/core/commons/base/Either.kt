@@ -8,7 +8,7 @@ sealed class Either<out T> {
     val isFailure get() = this is Failure
 
     data class Success<T>(val data: T) : Either<T>()
-    data class Failure(val error: Throwable) : Either<Nothing>()
+    data class Failure(val error: CodeThrowable) : Either<Nothing>()
 
     override fun toString(): String {
         return when (this) {
@@ -30,40 +30,34 @@ suspend fun <T> Either<T>.onSuccessSuspend(action: suspend (T) -> Unit): Either<
     return this
 }
 
-fun <T> Either<T>.onFailure(action: (exception: Throwable) -> Unit): Either<T> {
+fun <T> Either<T>.onFailure(action: (exception: CodeThrowable) -> Unit): Either<T> {
     if (this is Either.Failure) action(this.error)
     return this
 }
 
-suspend fun <T> Either<T>.onFailureSuspend(action: suspend (exception: Throwable) -> Unit): Either<T> {
+suspend fun <T> Either<T>.onFailureSuspend(action: suspend (exception: CodeThrowable) -> Unit): Either<T> {
     if (this is Either.Failure) action(this.error)
     return this
 }
 
 fun <T, R> Either<T>.mapCatching(transform: (data: T) -> R): Either<R> {
     return when (this) {
-        is Either.Success -> runCatchData {
-            transform(
-                data
-            )
-        }
-        is Either.Failure -> Either.Failure(
-            error
-        )
+        is Either.Success -> runCatchData { transform(data) }
+        is Either.Failure -> Either.Failure(error)
     }
 }
 
 fun <T> runCatchData(block: () -> T): Either<T> {
     return try {
         Either.Success(block())
-    } catch (error: Throwable) {
+    } catch (error: CodeThrowable) {
         Either.Failure(error)
     }
 }
 
 suspend fun <T> Flow<Either<T>>.collectData(
     onSuccess: (T) -> Unit = {},
-    onFailure: (Throwable) -> Unit = {}
+    onFailure: (CodeThrowable) -> Unit = {}
 ) {
     collect { result ->
         when (result) {

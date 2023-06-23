@@ -15,7 +15,7 @@ abstract class UseCase<in Params, out T>(
 
     operator fun invoke(
         params: Params? = null,
-        onFailure: (Throwable) -> Unit = {},
+        onFailure: (CodeThrowable) -> Unit = {},
         onSuccess: (T) -> Unit = {}
     ) {
         scope.launch(handleError(onFailure)) {
@@ -26,8 +26,8 @@ abstract class UseCase<in Params, out T>(
         }
     }
 
-    private fun handleError(onError: (Throwable) -> Unit): CoroutineContext {
-        return CoroutineExceptionHandler { _, throwable -> onError(throwable) }
+    private fun handleError(onError: (CodeThrowable) -> Unit): CoroutineContext {
+        return CoroutineExceptionHandler { _, throwable -> onError(throwable as CodeThrowable) }
     }
 
     fun cancel() = scope.coroutineContext.cancelChildren()
