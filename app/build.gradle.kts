@@ -40,6 +40,7 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.koin.android)
 
     testImplementation(libs.junit)
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.5'

@@ -7,6 +7,7 @@ import dev.tavieto.movielibrary.core.navigation.destination.LeafDestination
 object AuthRoutes : Routes {
     override val branch: BranchDestination = BranchDestination.Auth
 
+    object Introduction : LeafDestination(root = branch, route = "introduction")
     object SignIn : LeafDestination(root = branch, route = "sign_in")
     object SignUp : LeafDestination(root = branch, route = "sign_up")
 }

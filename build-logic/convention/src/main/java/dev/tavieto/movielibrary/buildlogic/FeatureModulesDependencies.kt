@@ -17,9 +17,9 @@ internal fun Project.configureFeatureDependencies(
         dependencies {
             implementation(project(":core:commons"))
             implementation(project(":core:core"))
-            implementation(project(":core:design"))
+            implementation(project(":core:uikit"))
 
-            implementation(libs.getLibrary("koin-core"))
+            implementation(libs.getLibrary("koin-androidx-compose"))
         }
     }
 }
