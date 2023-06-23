@@ -10,14 +10,37 @@ apply {
 
 android {
     namespace = "dev.tavieto.movielibrary.app"
-    defaultConfig.applicationId = "dev.tavieto.movielibrary.app"
+    defaultConfig {
+        applicationId = "dev.tavieto.movielibrary.app"
+        minSdk = 24
+        targetSdk = 33
+        versionCode = 1
+        versionName = "1.0.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    flavorDimensions.add("version")
+
+    productFlavors {
+        create("prod") {
+            dimension = "version"
+        }
+        create("dev") {
+            dimension = "version"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
+    }
 }
 
 dependencies {
+    implementation(project(":core:navigation"))
+
     implementation(libs.androidx.core.ktx)
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.koin.android)
 
     testImplementation(libs.junit)
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.5'

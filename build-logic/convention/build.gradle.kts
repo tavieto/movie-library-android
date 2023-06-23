@@ -23,5 +23,9 @@ gradlePlugin {
             id = "dev.tavieto.android.compose"
             implementationClass = "AndroidJetpackCompose"
         }
+        register("AndroidFeature") {
+            id = "dev.tavieto.android.feature"
+            implementationClass = "AndroidFeatureDefaultSettings"
+        }
     }
 }
