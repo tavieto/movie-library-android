@@ -3,6 +3,9 @@ android {
 
     defaultConfig.vectorDrawables.useSupportLibrary = true
 
+    Properties secrets = new Properties()
+    secrets.load(project.rootProject.file('secrets.properties').newDataInputStream())
+
     buildTypes {
         release {
             minifyEnabled true
@@ -21,6 +24,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro',
                     'proguard-rules-staging.pro'
         }
+    }
+
+    buildTypes.all {
+        buildConfigField "String", "TMDB_API_KEY", secrets.getProperty("TMDB_API_KEY") as String
+        buildConfigField "String", "TMDB_READ_TOKEN", secrets.getProperty("TMDB_READ_TOKEN") as String
     }
 
     packagingOptions {
