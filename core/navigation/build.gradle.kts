@@ -3,6 +3,10 @@ plugins {
     id("dev.tavieto.android.compose")
 }
 
+apply {
+    from("$rootDir/android-common.gradle")
+}
+
 android.namespace = "dev.tavieto.movielibrary.core.navigation"
 
 dependencies {

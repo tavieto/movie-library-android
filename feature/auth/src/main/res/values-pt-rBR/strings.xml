@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Login</string>
+    <string name="label_password">Senha</string>
+    <string name="button_sign_in">Entrar</string>
+    <string name="description_navigation_button">Voltar</string>
+</resources>

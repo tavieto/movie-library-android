@@ -1,9 +1,10 @@
 plugins {
-    id("java-library")
-    id("org.jetbrains.kotlin.jvm")
+    id("kotlin")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+dependencies {
+    implementation(project(":core:commons"))
+    implementation(project(":domain:auth"))
+    implementation(libs.koin.core)
+    implementation(libs.kotlinx.coroutines.core)
 }

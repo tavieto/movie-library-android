@@ -3,4 +3,12 @@ plugins {
     id("kotlin-parcelize")
 }
 
+apply {
+    from("$rootDir/android-common.gradle")
+}
+
 android.namespace = "dev.tavieto.movielibrary.feature.main"
+
+dependencies {
+    implementation(project(":domain:auth"))
+}

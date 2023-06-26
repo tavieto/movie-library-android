@@ -42,14 +42,8 @@ suspend fun <T> Either<T>.onFailureSuspend(action: suspend (exception: Throwable
 
 fun <T, R> Either<T>.mapCatching(transform: (data: T) -> R): Either<R> {
     return when (this) {
-        is Either.Success -> runCatchData {
-            transform(
-                data
-            )
-        }
-        is Either.Failure -> Either.Failure(
-            error
-        )
+        is Either.Success -> runCatchData { transform(data) }
+        is Either.Failure -> Either.Failure(error)
     }
 }
 

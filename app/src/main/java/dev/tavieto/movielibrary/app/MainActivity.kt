@@ -4,28 +4,32 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import dev.tavieto.movielibrary.app.ui.theme.MovieLibraryTheme
+import dev.tavieto.movielibrary.core.uikit.theme.MovieLibraryTheme
 import dev.tavieto.movielibrary.core.navigation.AppNavigation
-import dev.tavieto.movielibrary.core.navigation.core.NavigationCommand
-import dev.tavieto.movielibrary.core.navigation.core.NavigationManager
-import dev.tavieto.movielibrary.core.navigation.core.NavigationType
+import dev.tavieto.movielibrary.core.navigation.manager.NavigationCommand
+import dev.tavieto.movielibrary.core.navigation.manager.NavigationManager
+import dev.tavieto.movielibrary.core.navigation.manager.NavigationType
+import dev.tavieto.movielibrary.core.navigation.routes.AuthRoutes
+import dev.tavieto.movielibrary.core.navigation.routes.MainRoutes
+import dev.tavieto.movielibrary.data.local.manager.LocalSessionManager
+import dev.tavieto.movielibrary.data.local.manager.SessionState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class MainActivity : ComponentActivity(), KoinComponent {
 
     private val navManager: NavigationManager by inject()
-    private val viewModel: MainViewModel by viewModel()
+    private val localSessionManager: LocalSessionManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +39,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             MovieLibraryTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colors.background
                 ) {
                     AppNavigation(navController = navController)
                 }
@@ -43,6 +47,23 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
             LaunchedEffect(Unit) {
                 observeAndNavigate(navManager, navController)
+                observeLocalSession(localSessionManager, navManager)
+            }
+        }
+    }
+
+    private fun observeLocalSession(
+        localSessionManager: LocalSessionManager,
+        navManager: NavigationManager
+    ) {
+        localSessionManager.checkConnection()
+        lifecycleScope.launch {
+            localSessionManager.state.collectLatest { state ->
+                val route = when (state) {
+                    SessionState.CONNECTED -> MainRoutes.Home.createRoute()
+                    SessionState.DISCONNECTED -> AuthRoutes.Introduction.createRoute()
+                }
+                navManager.navigate(route = route)
             }
         }
     }

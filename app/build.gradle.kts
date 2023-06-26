@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("dev.tavieto.android.compose")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 apply {
@@ -18,29 +20,26 @@ android {
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    flavorDimensions.add("version")
-
-    productFlavors {
-        create("prod") {
-            dimension = "version"
-        }
-        create("dev") {
-            dimension = "version"
-            applicationIdSuffix = ".dev"
-            versionNameSuffix = "-dev"
-        }
-    }
 }
 
 dependencies {
     implementation(project(":core:navigation"))
+    implementation(project(":core:uikit"))
+    implementation(project(":data:firebase"))
+    implementation(project(":data:local"))
+    implementation(project(":data:remote"))
+    implementation(project(":domain:auth"))
+    implementation(project(":repository"))
 
     implementation(libs.androidx.core.ktx)
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.koin.android)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.firebase.perf.ktx)
 
     testImplementation(libs.junit)
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
