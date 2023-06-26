@@ -1,7 +1,7 @@
 package dev.tavieto.movielibrary.feature.auth.ui.signin
 
 import androidx.lifecycle.ViewModel
-import dev.tavieto.movielibrary.core.commons.base.CodeThrowable
+
 import dev.tavieto.movielibrary.core.delegate.useCase
 import dev.tavieto.movielibrary.domain.auth.model.SignInCredentials
 import dev.tavieto.movielibrary.domain.auth.usecase.SignInUseCase
@@ -53,7 +53,7 @@ class SignInViewModel(
         _state.update { it.copy(isLoading = isLoading) }
     }
 
-    private fun setError(error: CodeThrowable?) {
+    private fun setError(error: Throwable?) {
         _state.update { it.copy(error = error) }
     }
 }

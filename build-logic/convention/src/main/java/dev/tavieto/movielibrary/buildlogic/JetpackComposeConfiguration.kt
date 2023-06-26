@@ -29,7 +29,7 @@ internal fun Project.configureJetpackCompose(
                 implementation(getLibrary("androidx-compose-ui-util"))
                 implementation(getLibrary("androidx-compose-ui-tooling"))
                 implementation(getLibrary("androidx-compose-ui-tooling-preview"))
-                implementation(getLibrary("androidx-compose-material3"))
+                implementation(getLibrary("androidx-compose-material"))
             }
         }
     }

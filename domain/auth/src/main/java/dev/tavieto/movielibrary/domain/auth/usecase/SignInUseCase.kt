@@ -23,10 +23,9 @@ class SignInUseCase(
         if (params == null) throw MissingParamsException()
         return runCatchExceptions(
             conditions = listOf(
-                params.email.isNotBlank() to EmptyEmailException(),
+                params.email.isBlank() to EmptyEmailException(),
                 params.email.isNotEmail() to InvalidEmailException(),
-                params.password.isNotBlank() to EmptyPasswordException(),
-                params.password.isNotPassword() to InvalidPasswordException(),
+                params.password.isBlank() to EmptyPasswordException(),
             ),
             result = {
                 repository.signIn(email = params.email, password = params.password)

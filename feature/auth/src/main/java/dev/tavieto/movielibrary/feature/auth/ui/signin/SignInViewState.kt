@@ -1,10 +1,10 @@
 package dev.tavieto.movielibrary.feature.auth.ui.signin
 
-import dev.tavieto.movielibrary.core.commons.base.CodeThrowable
+
 
 data class SignInViewState(
-    val email: String = "",
-    val password: String = "",
+    val email: String = "otavio.gabriel202020@gmail.com",
+    val password: String = "123456",
     val isLoading: Boolean = false,
-    val error: CodeThrowable? = null
+    val error: Throwable? = null
 )

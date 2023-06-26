@@ -1,4 +1,4 @@
-package dev.tavieto.movielibrary.core.navigation.core
+package dev.tavieto.movielibrary.core.navigation.manager
 
 import androidx.navigation.NavOptions
 import androidx.navigation.NavOptionsBuilder
@@ -15,12 +15,6 @@ class NavigationManager(
     private val _commands: Channel<NavigationCommand> = Channel(Channel.BUFFERED)
     val commands = _commands.receiveAsFlow()
 
-    /**
-     * Navigate to a route in the current NavGraph. If an invalid route is given, an
-     * [IllegalArgumentException] will be thrown.
-     *
-     * @param route route for the destination
-     */
     private fun navigate(route: String, navOptions: NavOptions? = null) {
         applicationScope.launch {
             _commands.send(
@@ -48,12 +42,6 @@ class NavigationManager(
         }
     }
 
-    /**
-     * Attempts to pop the controller's back stack back to a specific destination.
-     *
-     * @param route The topmost destination to retain
-     * @param inclusive Whether the given destination should also be popped.
-     */
     fun popStackTo(route: String, inclusive: Boolean) {
         applicationScope.launch {
             _commands.send(
@@ -65,7 +53,7 @@ class NavigationManager(
         }
     }
 
-    fun popStackBack() {
+    fun popBackStack() {
         applicationScope.launch {
             _commands.send(NavigationCommand.PopBackStack.Default)
         }

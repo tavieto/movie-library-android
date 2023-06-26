@@ -1,9 +1,8 @@
 package dev.tavieto.movielibrary.core.commons.exception
 
-import dev.tavieto.movielibrary.core.commons.base.CodeThrowable
+
 
 class UnknownCodeException(
     override val message: String? = null,
-    override val cause: Throwable? = null,
-    override val code: String? = null
-) : CodeThrowable(message)
+    override val cause: Throwable? = null
+) : Throwable(message)

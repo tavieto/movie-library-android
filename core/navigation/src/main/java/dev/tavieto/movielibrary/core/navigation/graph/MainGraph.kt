@@ -6,6 +6,7 @@ import androidx.navigation.navigation
 import dev.tavieto.movielibrary.core.navigation.routes.MainRoutes
 import dev.tavieto.movielibrary.feature.main.ui.details.DetailsScreen
 import dev.tavieto.movielibrary.feature.main.ui.home.HomeScreen
+import org.koin.androidx.compose.getViewModel
 
 internal fun NavGraphBuilder.addMainGraph() {
     navigation(
@@ -21,7 +22,7 @@ private fun NavGraphBuilder.addHomeScreen() {
     composable(
         route = MainRoutes.Home.createRoute()
     ) {
-        HomeScreen()
+        HomeScreen(getViewModel())
     }
 }
 

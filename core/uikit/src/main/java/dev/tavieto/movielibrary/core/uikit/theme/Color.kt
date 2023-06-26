@@ -1,4 +1,4 @@
-package dev.tavieto.movielibrary.app.ui.theme
+package dev.tavieto.movielibrary.core.uikit.theme
 
 import androidx.compose.ui.graphics.Color
 
