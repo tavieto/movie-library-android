@@ -27,5 +27,9 @@ gradlePlugin {
             id = "dev.tavieto.android.feature"
             implementationClass = "AndroidFeatureDefaultSettings"
         }
+        register("KotlinDomain") {
+            id = "dev.tavieto.kotlin.domain"
+            implementationClass = "KotlinDomain"
+        }
     }
 }

@@ -1,7 +1,6 @@
 package dev.tavieto.movielibrary.core.commons.exception
 
-
-
-class BagException(
+class NotAuthorizedException(
     override val message: String? = null,
-) : Throwable()
+    override val cause: Throwable? = null
+) : Throwable(message)

@@ -11,4 +11,5 @@ android.namespace = "dev.tavieto.movielibrary.feature.main"
 
 dependencies {
     implementation(project(":domain:auth"))
+    implementation(project(":domain:movie"))
 }

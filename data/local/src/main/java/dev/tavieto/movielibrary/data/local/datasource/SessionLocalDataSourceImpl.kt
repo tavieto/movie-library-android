@@ -1,7 +1,6 @@
 package dev.tavieto.movielibrary.data.local.datasource
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.edit
 import dev.tavieto.movielibrary.data.local.datastore.SessionKeys
 import dev.tavieto.movielibrary.data.local.datastore.sessionDataStore
@@ -9,7 +8,6 @@ import dev.tavieto.movielibrary.data.local.manager.LocalSessionManager
 import dev.tavieto.movielibrary.repository.datasource.local.SessionLocalDataSource
 import dev.tavieto.movielibrary.repository.model.SessionData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 internal class SessionLocalDataSourceImpl(

@@ -3,16 +3,12 @@ package dev.tavieto.movielibrary.repository.repository
 import dev.tavieto.movielibrary.core.commons.base.Either
 import dev.tavieto.movielibrary.core.commons.base.mapCatching
 import dev.tavieto.movielibrary.domain.auth.repository.AuthRepository
-import dev.tavieto.movielibrary.repository.datasource.local.AuthLocalDataSource
 import dev.tavieto.movielibrary.repository.datasource.local.SessionLocalDataSource
 import dev.tavieto.movielibrary.repository.datasource.remote.AuthRemoteDataSource
 import dev.tavieto.movielibrary.repository.model.SessionData
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.mapLatest
 
 internal class AuthRepositoryImpl(
     private val remote: AuthRemoteDataSource,

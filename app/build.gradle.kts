@@ -28,7 +28,9 @@ dependencies {
     implementation(project(":data:firebase"))
     implementation(project(":data:local"))
     implementation(project(":data:remote"))
+    implementation(project(":data:server"))
     implementation(project(":domain:auth"))
+    implementation(project(":domain:movie"))
     implementation(project(":repository"))
 
     implementation(libs.androidx.core.ktx)
