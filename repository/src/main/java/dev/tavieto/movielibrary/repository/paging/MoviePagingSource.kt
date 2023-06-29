@@ -1,11 +1,6 @@
 package dev.tavieto.movielibrary.repository.paging
 
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
-import dev.tavieto.movielibrary.repository.model.MovieData
-import kotlin.math.max
-
-class MoviePagingSource : PagingSource<Int, MovieData>() {
+class MoviePagingSource /*: PagingSource<Int, MovieData>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieData> {
         val start = params.key ?: STARTING_KEY
@@ -13,7 +8,7 @@ class MoviePagingSource : PagingSource<Int, MovieData>() {
 
         return LoadResult.Page(
             data = range.map { number ->
-                MovieData()
+//                MovieData()
             },
             prevKey = when (start) {
                 STARTING_KEY -> null
@@ -33,4 +28,4 @@ class MoviePagingSource : PagingSource<Int, MovieData>() {
     private companion object {
         const val STARTING_KEY = 1
     }
-}
+}*/

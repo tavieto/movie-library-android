@@ -13,6 +13,7 @@ androidxNavigationKtx = "2.6.0"
 androidxMultidex = "2.0.1"
 androidxPaging = "3.1.1"
 androidxPreferences = "1.1.1"
+androidxRoom = "2.4.1"
 assertk = "0.24"
 firebaseBom = "29.3.1"
 firebaseUiAuth = "7.2.0"
@@ -58,6 +59,10 @@ androidx-navigation-common-ktx = { group = "androidx.navigation", name = "naviga
 androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidxPaging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version = "1.0.0-alpha18" }
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "androidxPreferences" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidxRoom" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version = "2.4.1" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk-jvm", version.ref = "assertk" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
