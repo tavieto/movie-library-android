@@ -2,6 +2,7 @@ package dev.tavieto.movielibrary.core.commons.extension
 
 import dev.tavieto.movielibrary.core.commons.enums.RegexEnum
 import java.text.SimpleDateFormat
+import java.util.Locale
 
 private const val MIN_CHAR = 8
 
@@ -90,6 +91,9 @@ fun String.clearMask(mask: String): String {
 }
 
 // TODO("WIP - I have to done this extension to convert date formats.")
-fun String.formatDate(pattern: String = "DD/MM/YYYY"): String {
-    return SimpleDateFormat().applyPattern(pattern).toString()
+fun String.formatDate(pattern: String = "yyyy-MM-dd", to: String = "dd/MM/yyyy"): String {
+    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    val date = dateFormat.parse(this)
+    val stringDateFormat = SimpleDateFormat(to, Locale.getDefault())
+    return stringDateFormat.format(date)
 }

@@ -13,6 +13,7 @@ import dev.tavieto.movielibrary.core.commons.extension.isEmail
 import dev.tavieto.movielibrary.core.commons.extension.isNotEmail
 import dev.tavieto.movielibrary.core.commons.extension.isNotPassword
 import dev.tavieto.movielibrary.core.commons.extension.isPassword
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -79,9 +80,9 @@ class StringExtensionTest {
     }
 
     @Test
-    fun `WHEN`() {
-        val date = "2022-12-01".formatDate()
-        println(date)
-        assertTrue(date == "01/12/2022")
+    fun `WHEN has a date String MUST assert if is converting the date correctly`() {
+        assertTrue("2022-12-01".formatDate() == "01/12/2022")
+        assertTrue("2010-01-05".formatDate() == "05/01/2010")
+        assertFalse("2010-01-05".formatDate() == "2010-01-05")
     }
 }

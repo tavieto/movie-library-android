@@ -1,5 +1,8 @@
 package dev.tavieto.movielibrary.feature.main.ui.details
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,11 +19,20 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import dev.tavieto.movielibrary.core.commons.extension.formatDate
 import dev.tavieto.movielibrary.feature.main.model.MovieModel
 import dev.tavieto.movielibrary.feature.main.ui.component.MovieItem
 import dev.tavieto.movielibrary.feature.main.ui.component.StarsRate
@@ -30,13 +42,16 @@ fun DetailsScreen(
     movie: MovieModel,
     viewModel: DetailsViewModel
 ) {
+    var isFavorite by remember {
+        mutableStateOf(false)
+    }
     Scaffold(
         topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
                     onClick = {
@@ -44,6 +59,24 @@ fun DetailsScreen(
                     }
                 ) {
                     Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+                }
+                IconButton(
+                    onClick = {
+                        isFavorite = isFavorite.not()
+                    }
+                ) {
+                    Icon(imageVector = Icons.Rounded.FavoriteBorder, contentDescription = null)
+                    AnimatedVisibility(
+                        visible = isFavorite,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Favorite,
+                            contentDescription = null,
+                            tint = Color.Red
+                        )
+                    }
                 }
             }
         }
@@ -75,7 +108,9 @@ fun DetailsScreen(
             Text(text = "Data de lançamento", style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = movie.releaseDate,
+                text = movie.releaseDate.formatDate(
+                    to = stringResource(id = com.raptor.sports.core.R.string.date_pattern)
+                ),
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Justify
             )

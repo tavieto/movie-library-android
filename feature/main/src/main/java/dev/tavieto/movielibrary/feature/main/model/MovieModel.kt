@@ -14,7 +14,8 @@ data class MovieModel(
     val posterPath: String,
     val releaseDate: String,
     val title: String,
-    val voteAverage: Double
+    val voteAverage: Double,
+    val isFavorite: Boolean = false
 ) : Parcelable
 
 internal fun MovieDomain.mapFromDomain(): MovieModel {
