@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRemoteDataSource {
     suspend fun signIn(email: String, password: String): Flow<Either<UserData>>
-    suspend fun signUp()
+    suspend fun signUp(name: String, email: String, password: String): Flow<Either<UserData>>
     suspend fun signOut(): Flow<Either<Unit>>
 }

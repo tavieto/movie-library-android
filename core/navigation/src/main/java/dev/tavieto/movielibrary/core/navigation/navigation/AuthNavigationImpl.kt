@@ -5,11 +5,13 @@ import dev.tavieto.movielibrary.core.navigation.routes.AuthRoutes
 import dev.tavieto.movielibrary.core.navigation.routes.MainRoutes
 import dev.tavieto.movielibrary.feature.auth.ui.introduction.IntroductionNavigation
 import dev.tavieto.movielibrary.feature.auth.ui.signin.SignInNavigation
+import dev.tavieto.movielibrary.feature.auth.ui.signup.SignUpNavigation
 
 internal class AuthNavigationImpl(
     private val navigationManager: NavigationManager
 ) : IntroductionNavigation,
-    SignInNavigation {
+    SignInNavigation,
+    SignUpNavigation {
     override fun navigateToSignIn() {
         navigationManager.navigate(AuthRoutes.SignIn.createRoute())
     }

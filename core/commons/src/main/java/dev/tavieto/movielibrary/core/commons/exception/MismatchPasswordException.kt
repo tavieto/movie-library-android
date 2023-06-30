@@ -1,5 +1,5 @@
 package dev.tavieto.movielibrary.core.commons.exception
 
-class InvalidPasswordMinCharException(
+class MismatchPasswordException(
     override val message: String? = null
 ) : Throwable(message)

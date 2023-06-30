@@ -2,6 +2,6 @@ package dev.tavieto.movielibrary.core.commons.exception
 
 
 
-class EmptyFullNameException(
+class EmptyNameException(
     override val message: String? = null
 ) : Throwable()

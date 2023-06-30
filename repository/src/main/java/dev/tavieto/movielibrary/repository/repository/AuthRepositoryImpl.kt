@@ -33,8 +33,13 @@ internal class AuthRepositoryImpl(
         name: String,
         email: String,
         password: String
-    ): Flow<Either<Unit>> {
-        TODO("Not yet implemented")
+    ): Flow<Either<Unit>> = channelFlow {
+        remote.signUp(name, email, password).collectLatest { result ->
+            if (result is Either.Success) {
+                session.saveSession(SessionData(result.data.id))
+            }
+            trySend(result.mapCatching { })
+        }
     }
 
     override suspend fun signOut(): Flow<Either<Unit>> {

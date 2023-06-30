@@ -2,7 +2,7 @@ package dev.tavieto.movielibrary.feature.auth.ui.signin
 
 import androidx.lifecycle.ViewModel
 import dev.tavieto.movielibrary.core.delegate.useCase
-import dev.tavieto.movielibrary.domain.auth.model.SignInCredentials
+import dev.tavieto.movielibrary.domain.auth.model.SignInCredentialsDomain
 import dev.tavieto.movielibrary.domain.auth.usecase.SignInUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +29,7 @@ class SignInViewModel(
     fun performSignIn() {
         setLoading(true)
         signInUseCase(
-            params = SignInCredentials(
+            params = SignInCredentialsDomain(
                 email = _state.value.email,
                 password = _state.value.password
             ),

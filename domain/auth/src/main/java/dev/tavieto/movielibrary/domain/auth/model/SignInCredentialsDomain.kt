@@ -1,6 +1,6 @@
 package dev.tavieto.movielibrary.domain.auth.model
 
-data class SignInCredentials(
+data class SignInCredentialsDomain(
     val email: String,
     val password: String
 )

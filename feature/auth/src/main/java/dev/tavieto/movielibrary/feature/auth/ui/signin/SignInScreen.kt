@@ -4,22 +4,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import dev.tavieto.movielibrary.core.uikit.R.string
+import dev.tavieto.movielibrary.core.uikit.components.EmailTextField
+import dev.tavieto.movielibrary.core.uikit.components.PasswordTextField
 import dev.tavieto.movielibrary.feature.auth.R
 
 @Composable
@@ -43,27 +41,19 @@ fun SignInScreen(viewModel: SignInViewModel) {
             Text(
                 text = stringResource(id = R.string.title)
             )
-            TextField(
+            EmailTextField(
                 value = state.email,
-                onValueChange = { viewModel.setEmail(it) },
-                label = {
-                    Text(text = stringResource(id = R.string.label_email))
-                }
+                onValueChange = { email -> viewModel.setEmail(email) },
+                label = stringResource(id = string.email_label)
             )
-            TextField(
+            PasswordTextField(
                 value = state.password,
-                onValueChange = { viewModel.setPassword(it) },
-                visualTransformation = PasswordVisualTransformation(),
-                label = {
-                    Text(text = stringResource(id = R.string.label_password))
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    autoCorrect = false,
-                    imeAction = ImeAction.Done
-                ),
+                onValueChange = { password -> viewModel.setPassword(password) },
+                label = stringResource(id = string.password_label),
                 keyboardActions = KeyboardActions(
-                    onDone = { viewModel.performSignIn() }
+                    onDone = {
+                        viewModel.performSignIn()
+                    }
                 )
             )
             Button(onClick = { viewModel.performSignIn() }) {

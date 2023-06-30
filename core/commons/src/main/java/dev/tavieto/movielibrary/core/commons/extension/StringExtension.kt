@@ -4,7 +4,7 @@ import dev.tavieto.movielibrary.core.commons.enums.RegexEnum
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-private const val MIN_CHAR = 8
+private const val MIN_CHAR = 6
 
 fun String.isFullName() = RegexEnum.FULL_NAME.match(this)
 fun String.isNotFullName() = isFullName().not()
