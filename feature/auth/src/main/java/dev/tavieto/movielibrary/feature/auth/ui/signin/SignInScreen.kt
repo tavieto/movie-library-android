@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -30,10 +31,12 @@ fun SignInScreen(viewModel: SignInViewModel) {
 
     Scaffold(
         topBar = {
-            Icon(
-                imageVector = Icons.Rounded.ArrowBack,
-                contentDescription = stringResource(id = R.string.description_navigation_button)
-            )
+            IconButton(onClick = { viewModel.navigateBack() }) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    contentDescription = stringResource(id = R.string.description_navigation_button)
+                )
+            }
         }
     ) {
         Column(

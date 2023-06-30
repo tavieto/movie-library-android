@@ -44,7 +44,7 @@ class SignInViewModel(
         )
     }
 
-    fun popBackStack() {
+    fun navigateBack() {
         navigation.popBackStack()
     }
 
