@@ -1,5 +1,6 @@
 package dev.tavieto.movielibrary.feature.main.ui.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,13 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ExitToApp
@@ -26,6 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -38,6 +45,12 @@ import dev.tavieto.movielibrary.feature.main.ui.component.MovieItem
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
     val state by viewModel.state.collectAsState()
+    val tabsText = remember {
+        mutableStateListOf("Em cartaz", "Que existem", "Favoritos")
+    }
+    var tabIndex by remember {
+        mutableStateOf(0)
+    }
 
     Scaffold(
         topBar = {
@@ -81,50 +94,110 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 }
             }
         }
-    ) {
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
-            verticalArrangement = Arrangement.Center,
+                .padding(padding),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn {
-                items(state.movies) { (type, movies) ->
-                    Text(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        text = stringResource(
-                            id = when (type) {
-                                MovieListType.NOW_PLAYING -> R.string.now_playing_movie_list_type_name
-                                MovieListType.POPULAR -> R.string.popular_movie_list_type_name
-                                MovieListType.TOP_RATED -> R.string.top_rated_movie_list_type_name
-                                MovieListType.UPCOMING -> R.string.upcoming_movie_list_type_name
+            TabRow(selectedTabIndex = tabIndex) {
+                tabsText.forEachIndexed { index, text ->
+                    Tab(
+                        selected = tabIndex == index,
+                        onClick = {
+                            if (tabIndex != index) {
+                                tabIndex = index
                             }
-                        )
-                    )
-                    LazyRow(
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(movies) { movie ->
-                            MovieItem(
-                                modifier = Modifier.clickable {
-                                    viewModel.navigateToDetails(movie)
-                                },
-                                moviePosterPath = movie.posterPath,
-                                height = 200.dp
-                            )
+                        },
+                        text = {
+                            Text(text = text)
                         }
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
+                    )
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            Crossfade(targetState = tabIndex) {
+                LazyVerticalGrid(
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
+                    columns = GridCells.Adaptive(90.dp),
+                    content = {
+                        when (it) {
+                            0 -> items(state.nowPlayingMovies) { movie ->
+                                MovieItem(
+                                    modifier = Modifier.clickable {
+                                        viewModel.navigateToDetails(movie)
+                                    },
+                                    moviePosterPath = movie.posterPath,
+                                    height = 150.dp
+                                )
+                            }
+
+                            1 -> items(state.popularMovies) { movie ->
+                                MovieItem(
+                                    modifier = Modifier.clickable {
+                                        viewModel.navigateToDetails(movie)
+                                    },
+                                    moviePosterPath = movie.posterPath,
+                                    height = 150.dp
+                                )
+                            }
+
+                            else -> items(state.favoritesMovies) { movie ->
+                                MovieItem(
+                                    modifier = Modifier.clickable {
+                                        viewModel.navigateToDetails(movie)
+                                    },
+                                    moviePosterPath = movie.posterPath,
+                                    height = 150.dp
+                                )
+                            }
+                        }
+                    },
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                )
+            }
         }
+//            LazyColumn {
+//                items(state.movies) { (type, movies) ->
+//                    Text(
+//                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+//                        text = stringResource(
+//                            id = when (type) {
+//                                MovieListType.NOW_PLAYING -> R.string.now_playing_movie_list_type_name
+//                                MovieListType.POPULAR -> R.string.popular_movie_list_type_name
+//                                MovieListType.TOP_RATED -> R.string.top_rated_movie_list_type_name
+//                                MovieListType.UPCOMING -> R.string.upcoming_movie_list_type_name
+//                            }
+//                        )
+//                    )
+//                    LazyRow(
+//                        contentPadding = PaddingValues(horizontal = 16.dp),
+//                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+//                    ) {
+//                        items(movies) { movie ->
+//                            MovieItem(
+//                                modifier = Modifier.clickable {
+//                                    viewModel.navigateToDetails(movie)
+//                                },
+//                                moviePosterPath = movie.posterPath,
+//                                height = 200.dp
+//                            )
+//                        }
+//                    }
+//                    Spacer(modifier = Modifier.height(8.dp))
+//                }
+//            }
+//        }
     }
 
     LaunchedEffect(Unit) {
         if (state.isInitialized.not()) {
-            MovieListType.values().forEach { viewModel.getMovies(it) }
+//            MovieListType.values().forEach { viewModel.getMovies(it) }
+            viewModel.getMovies(MovieListType.NOW_PLAYING)
+            viewModel.getMovies(MovieListType.POPULAR)
             viewModel.initialize()
         }
     }

@@ -109,7 +109,10 @@ fun SignUpScreen(
                         viewModel.setConfirmPasswordVisibility(state.isConfirmPasswordVisible.not())
                     }
                 )
-                Button(onClick = { viewModel.signUp() }) {
+                Button(
+                    enabled = state.isLoading.not(),
+                    onClick = { viewModel.signUp() }
+                ) {
                     Text(
                         text = stringResource(id = R.string.signup_screen_sing_button),
                         style = MaterialTheme.typography.button

@@ -2,6 +2,7 @@ package dev.tavieto.movielibrary.feature.main.ui.component
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ fun StarsRate(
     maxValue: Float = 10f
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -76,7 +78,7 @@ private fun StarsProgress(
         )
 
         Stars(
-            color = Color.Yellow,
+            color = if (isSystemInDarkTheme()) Color.Yellow else Color(color = 0xFFFFAB00),
             modifier = Modifier
                 .clipToBounds()
                 .width(width)

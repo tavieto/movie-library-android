@@ -33,7 +33,7 @@ internal class AuthServiceImpl : AuthService {
                                 id = user.getString("uid") ?: "",
                                 name = user.getString("name") ?: "",
                                 email = user.getString("email") ?: "",
-                                tmdbSessionId = user.getString("tmdb_session_id") ?: ""
+                                tmdbAccountId = user.getString("tmdb_session_id") ?: ""
                             )
                             trySend(Either.Success(userResponse))
                         }
@@ -76,7 +76,7 @@ internal class AuthServiceImpl : AuthService {
                                         id = user.getString("uid") ?: "",
                                         name = user.getString("name") ?: "",
                                         email = user.getString("email") ?: "",
-                                        tmdbSessionId = user.getString("tmdb_session_id") ?: ""
+                                        tmdbAccountId = user.getString("tmdb_session_id") ?: ""
                                     )
                                     trySend(Either.Success(userResponse))
                                 }
