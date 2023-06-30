@@ -5,4 +5,10 @@ enum class MovieListType(val id: String) {
     POPULAR(id = "popular"),
     TOP_RATED(id = "top_rated"),
     UPCOMING(id = "upcoming");
+
+    companion object {
+        fun getFromId(id: String): MovieListType? {
+            return values().firstOrNull { it.id == id }
+        }
+    }
 }

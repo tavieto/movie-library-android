@@ -8,5 +8,5 @@ data class MovieDomain(
     val posterPath: String,
     val releaseDate: String,
     val title: String,
-    val voteAverage: Double,
+    val voteAverage: Double
 )

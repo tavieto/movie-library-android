@@ -10,6 +10,7 @@ apply {
 android.namespace = "dev.tavieto.movielibrary.data.local"
 
 dependencies {
+    implementation(project(":core:commons"))
     implementation(project(":repository"))
     implementation(libs.koin.android)
     implementation(libs.androidx.datastore)

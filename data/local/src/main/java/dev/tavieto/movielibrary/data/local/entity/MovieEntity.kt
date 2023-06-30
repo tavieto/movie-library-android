@@ -4,12 +4,15 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.Gson
+import dev.tavieto.movielibrary.core.commons.enums.MovieListType
 import dev.tavieto.movielibrary.repository.model.MovieData
 
 @Entity(tableName = "movies")
 data class MovieEntity(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
+    @ColumnInfo(name = "type")
+    val type: String,
     @ColumnInfo(name = "adult")
     val adult: Boolean,
     @ColumnInfo(name = "genre_ids")
@@ -42,10 +45,11 @@ data class MovieEntity(
 
 internal fun List<MovieEntity>.mapToRepository() = this.map { it.mapToRepository() }
 
-internal fun MovieData.mapToEntity(): MovieEntity {
+internal fun MovieData.mapToEntity(type: MovieListType): MovieEntity {
     val gson = Gson()
     return MovieEntity(
         id = this.id,
+        type = type.id,
         adult = this.adult,
         genreIds = gson.toJson(this.genreIds),
         overview = this.overview,

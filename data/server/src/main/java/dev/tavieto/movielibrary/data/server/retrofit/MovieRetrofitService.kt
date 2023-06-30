@@ -10,6 +10,7 @@ interface MovieRetrofitService {
     @POST("movie/{movieListType}")
     fun getMovieList(
         @Path("movieListType") movieListType: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("language") language: String = "pt-BR"
     ): Call<MoviePageResponse>
 }

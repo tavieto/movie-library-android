@@ -23,7 +23,8 @@ internal class MovieServiceImpl(
                 NetworkWrapper {
                     service.getMovieList(
                         movieListType = movieListType.id,
-                        page = page
+                        page = page,
+                        language = "pt-BR"
                     )
                 }.results.mapToRemote()
             }

@@ -1,9 +1,13 @@
 package dev.tavieto.movielibrary.repository.model
 
-import dev.tavieto.movielibrary.domain.movie.model.MoviesDomain
+import dev.tavieto.movielibrary.domain.movie.model.MovieListDomain
 
 typealias MoviesData = List<MovieData>
 
-internal fun MoviesData.mapToDomain(): MoviesDomain {
+internal fun MoviesData.mapToDomain(): MovieListDomain {
     return this.map { it.mapToDomain() }
+}
+
+internal fun MovieListDomain.mapToRepository(): MoviesData {
+    return this.map { it.mapToRepository() }
 }

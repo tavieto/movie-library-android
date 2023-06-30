@@ -25,3 +25,16 @@ data class MovieData(
         )
     }
 }
+
+internal fun MovieDomain.mapToRepository(): MovieData {
+    return MovieData(
+        id = this.id,
+        adult = this.adult,
+        genreIds = this.genreIds,
+        overview = this.overview,
+        posterPath = this.posterPath,
+        releaseDate = this.releaseDate,
+        title = this.title,
+        voteAverage = this.voteAverage
+    )
+}

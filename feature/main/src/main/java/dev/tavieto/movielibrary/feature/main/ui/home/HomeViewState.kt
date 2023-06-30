@@ -1,7 +1,10 @@
 package dev.tavieto.movielibrary.feature.main.ui.home
 
-import dev.tavieto.movielibrary.domain.movie.model.MoviesDomain
+import dev.tavieto.movielibrary.core.commons.enums.MovieListType
+import dev.tavieto.movielibrary.feature.main.model.MovieListModel
 
 data class HomeViewState(
-    val movies: MoviesDomain = emptyList()
+    val userName: String = "Otávio",
+    val isInitialized: Boolean = false,
+    val movies: List<Pair<MovieListType, MovieListModel>> = emptyList()
 )

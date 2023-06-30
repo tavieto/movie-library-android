@@ -30,6 +30,7 @@ android {
         buildConfigField "String", "TMDB_API_BASE", secrets.getProperty("TMDB_API_BASE") as String
         buildConfigField "String", "TMDB_API_KEY", secrets.getProperty("TMDB_API_KEY") as String
         buildConfigField "String", "TMDB_READ_TOKEN", secrets.getProperty("TMDB_READ_TOKEN") as String
+        buildConfigField "String", "TMDB_API_BASE_URL_IMAGES", secrets.getProperty("TMDB_API_BASE_URL_IMAGES") as String
     }
 
     packagingOptions {

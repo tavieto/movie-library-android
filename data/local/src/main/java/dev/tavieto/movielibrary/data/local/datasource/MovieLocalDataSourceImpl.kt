@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dev.tavieto.movielibrary.core.commons.enums.MovieListType
 import dev.tavieto.movielibrary.data.local.dao.MovieDao
 import dev.tavieto.movielibrary.data.local.entity.mapToEntity
 import dev.tavieto.movielibrary.data.local.entity.mapToRepository
@@ -24,19 +25,18 @@ internal class MovieLocalDataSourceImpl(
         val pageCount = intPreferencesKey("page_count_key")
     }
 
-    override fun saveMovies(moviePage: MoviesData) {
-        dao.insertMovies(*moviePage.map { it.mapToEntity() }.toTypedArray())
+    override fun saveMovies(type: MovieListType, moviePage: MoviesData) {
+        dao.insertMovies(*moviePage.map { it.mapToEntity(type) }.toTypedArray())
     }
 
-    override fun getMovies(): MoviesData {
-        return dao.getMovies().mapToRepository()
+    override fun getMovies(type: MovieListType): MoviesData {
+        return dao.getMovies(type.id).mapToRepository()
     }
 
     override fun getLastPage(): Flow<Int> {
         return context.movieDataStore.data.map { preferences ->
-            val pageCount = preferences[MovieKeys.pageCount] ?: return@map 1
 
-            return@map pageCount
+            return@map preferences[MovieKeys.pageCount] ?: return@map 0
         }
     }
 
