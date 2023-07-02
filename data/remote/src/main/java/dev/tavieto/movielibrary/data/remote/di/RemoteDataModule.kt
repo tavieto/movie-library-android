@@ -7,6 +7,6 @@ import dev.tavieto.movielibrary.repository.datasource.remote.MovieRemoteDataSour
 import org.koin.dsl.module
 
 val remoteDataModule = module {
-    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get()) }
+    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get(), get()) }
     single<MovieRemoteDataSource> { MovieRemoteDataSourceImpl(get()) }
 }

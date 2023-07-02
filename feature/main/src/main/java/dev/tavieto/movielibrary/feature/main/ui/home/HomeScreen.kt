@@ -1,5 +1,9 @@
 package dev.tavieto.movielibrary.feature.main.ui.home
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +25,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Notifications
@@ -35,16 +40,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.tavieto.movielibrary.core.commons.enums.MovieListType
+import dev.tavieto.movielibrary.feature.main.BuildConfig
 import dev.tavieto.movielibrary.feature.main.R
 import dev.tavieto.movielibrary.feature.main.ui.component.MovieItem
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
     val state by viewModel.state.collectAsState()
+    val activity = LocalContext.current as Activity
     val tabsText = remember {
         mutableStateListOf("Em cartaz", "Que existem", "Favoritos")
     }
@@ -118,6 +126,21 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
+            AnimatedVisibility(visible = state.tmdbRequestToken != null) {
+                TextButton(
+                    onClick = {
+                        val url = BuildConfig.TMDB_URL_AUTH + state.tmdbRequestToken
+                        val urlQuery =
+                            "?redirect_to=" + "tavietodev://movielibrary.app/tmdb-approved"
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(url + urlQuery)
+                        activity.startActivity(intent)
+                    }
+                ) {
+                    Text(text = "Connect with your TMDB account")
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             Crossfade(targetState = tabIndex) {
                 LazyVerticalGrid(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
@@ -160,45 +183,16 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 )
             }
         }
-//            LazyColumn {
-//                items(state.movies) { (type, movies) ->
-//                    Text(
-//                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-//                        text = stringResource(
-//                            id = when (type) {
-//                                MovieListType.NOW_PLAYING -> R.string.now_playing_movie_list_type_name
-//                                MovieListType.POPULAR -> R.string.popular_movie_list_type_name
-//                                MovieListType.TOP_RATED -> R.string.top_rated_movie_list_type_name
-//                                MovieListType.UPCOMING -> R.string.upcoming_movie_list_type_name
-//                            }
-//                        )
-//                    )
-//                    LazyRow(
-//                        contentPadding = PaddingValues(horizontal = 16.dp),
-//                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                    ) {
-//                        items(movies) { movie ->
-//                            MovieItem(
-//                                modifier = Modifier.clickable {
-//                                    viewModel.navigateToDetails(movie)
-//                                },
-//                                moviePosterPath = movie.posterPath,
-//                                height = 200.dp
-//                            )
-//                        }
-//                    }
-//                    Spacer(modifier = Modifier.height(8.dp))
-//                }
-//            }
-//        }
     }
 
     LaunchedEffect(Unit) {
         if (state.isInitialized.not()) {
-//            MovieListType.values().forEach { viewModel.getMovies(it) }
             viewModel.getMovies(MovieListType.NOW_PLAYING)
             viewModel.getMovies(MovieListType.POPULAR)
+            viewModel.getMovies(MovieListType.FAVORITE)
+            viewModel.getUserName()
             viewModel.initialize()
         }
+        viewModel.getTmdbRequestToken()
     }
 }

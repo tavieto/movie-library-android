@@ -26,7 +26,7 @@ fun NameTextField(
         label = label,
         keyboardOptions = keyboardOptions.copy(
             keyboardType = KeyboardType.Text,
-            autoCorrect = false,
+            autoCorrect = true,
             capitalization = KeyboardCapitalization.Words
         ),
         keyboardActions = keyboardActions,

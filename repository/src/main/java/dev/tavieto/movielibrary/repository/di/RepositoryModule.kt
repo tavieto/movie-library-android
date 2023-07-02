@@ -7,6 +7,6 @@ import dev.tavieto.movielibrary.repository.repository.MovieRepositoryImpl
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
-    single<MovieRepository> { MovieRepositoryImpl(get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
+    single<MovieRepository> { MovieRepositoryImpl(get(), get(), get()) }
 }

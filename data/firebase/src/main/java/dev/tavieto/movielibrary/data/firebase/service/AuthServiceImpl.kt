@@ -25,15 +25,15 @@ internal class AuthServiceImpl : AuthService {
                         trySend(Either.Failure(UnknownUserException()))
                         return@addOnSuccessListener
                     }
-                    firestore.collection("user")
+                    firestore.collection(USER_COLLECTION)
                         .document(it.user!!.uid)
                         .get()
                         .addOnSuccessListener { user ->
                             val userResponse = UserResponse(
-                                id = user.getString("uid") ?: "",
-                                name = user.getString("name") ?: "",
-                                email = user.getString("email") ?: "",
-                                tmdbAccountId = user.getString("tmdb_session_id") ?: ""
+                                id = user.getString(ID_PARAM) ?: "",
+                                name = user.getString(NAME_PARAM) ?: "",
+                                email = user.getString(EMAIL_PARAM) ?: "",
+                                tmdbSessionId = user.getString("tmdb_session_id") ?: ""
                             )
                             trySend(Either.Success(userResponse))
                         }
@@ -58,13 +58,13 @@ internal class AuthServiceImpl : AuthService {
                 .addOnSuccessListener { result ->
                     val firebaseUser = result.user ?: return@addOnSuccessListener
                     val data = hashMapOf<String, Any>(
-                        "id" to firebaseUser.uid,
-                        "name" to name,
-                        "email" to email,
-                        "tmdb_session_id" to ""
+                        ID_PARAM to firebaseUser.uid,
+                        NAME_PARAM to name,
+                        EMAIL_PARAM to email,
+                        TMDB_SESSION_ID to ""
                     )
                     val userDocument = firestore
-                        .collection("user")
+                        .collection(USER_COLLECTION)
                         .document(firebaseUser.uid)
 
                     userDocument.set(data)
@@ -73,10 +73,10 @@ internal class AuthServiceImpl : AuthService {
                                 .get()
                                 .addOnSuccessListener { user ->
                                     val userResponse = UserResponse(
-                                        id = user.getString("uid") ?: "",
-                                        name = user.getString("name") ?: "",
-                                        email = user.getString("email") ?: "",
-                                        tmdbAccountId = user.getString("tmdb_session_id") ?: ""
+                                        id = user.getString(ID_PARAM) ?: "",
+                                        name = user.getString(NAME_PARAM) ?: "",
+                                        email = user.getString(EMAIL_PARAM) ?: "",
+                                        tmdbSessionId = user.getString(TMDB_SESSION_ID) ?: ""
                                     )
                                     trySend(Either.Success(userResponse))
                                 }
@@ -109,5 +109,42 @@ internal class AuthServiceImpl : AuthService {
                 Either.Failure(error)
             }
         )
+    }
+
+    override suspend fun saveSessionId(sessionId: String): Flow<Either<Unit>> = callbackFlow {
+        val user = auth.currentUser
+
+        if (user != null) {
+            val doc = firestore.collection(USER_COLLECTION).document(user.uid)
+            doc.get()
+                .addOnSuccessListener {
+                    it.data?.let { result ->
+                        val data = HashMap<String, Any>(result)
+                        data[TMDB_SESSION_ID] = sessionId
+                        doc.set(data)
+                            .addOnSuccessListener {
+                                trySend(Either.Success(Unit))
+                            }
+                            .addOnFailureListener { error ->
+                                trySend(Either.Failure(error))
+                            }
+                    } ?: trySend(Either.Failure(Throwable("Empty user")))
+                }
+                .addOnFailureListener {
+                    trySend(Either.Failure(it))
+                }
+
+        } else {
+            trySend(Either.Failure(Throwable("There's no user")))
+        }
+        awaitClose()
+    }
+
+    private companion object {
+        const val USER_COLLECTION = "user"
+        const val ID_PARAM = "id"
+        const val NAME_PARAM = "name"
+        const val EMAIL_PARAM = "email"
+        const val TMDB_SESSION_ID = "tmdb_session_id"
     }
 }

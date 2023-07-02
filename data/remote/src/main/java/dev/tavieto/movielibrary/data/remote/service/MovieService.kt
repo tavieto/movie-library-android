@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface MovieService {
     suspend fun getMovieList(
         movieListType: MovieListType,
-        page: Int
+        page: Int,
+        sessionId: String
     ): Flow<Either<MoviesResponse>>
 }

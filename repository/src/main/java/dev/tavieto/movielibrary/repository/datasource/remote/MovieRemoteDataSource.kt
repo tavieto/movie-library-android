@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface MovieRemoteDataSource {
     suspend fun getMovieList(
         movieListType: MovieListType,
+        sessionId: String,
         page: Int
     ): Flow<Either<MoviesData>>
 }

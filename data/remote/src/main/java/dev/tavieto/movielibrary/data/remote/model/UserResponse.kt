@@ -6,14 +6,14 @@ data class UserResponse(
     val id: String,
     val name: String,
     val email: String,
-    val tmdbAccountId: String
+    val tmdbSessionId: String
 ) {
     fun mapToRepository(): UserData {
         return UserData(
             id = this.id,
             name = this.name,
             email = this.email,
-            tmdbAccountId = this.tmdbAccountId
+            tmdbSessionId = this.tmdbSessionId
         )
     }
 }

@@ -6,6 +6,7 @@ import dev.tavieto.movielibrary.feature.main.model.MovieListModel
 data class HomeViewState(
     val userName: String = "Otávio",
     val isInitialized: Boolean = false,
+    val tmdbRequestToken: String? = null,
     val nowPlayingMovies: MovieListModel = emptyList(),
     val popularMovies: MovieListModel = emptyList(),
     val favoritesMovies: MovieListModel = emptyList(),

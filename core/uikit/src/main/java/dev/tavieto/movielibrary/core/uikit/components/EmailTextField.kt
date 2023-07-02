@@ -23,7 +23,8 @@ fun EmailTextField(
         onValueChange = onValueChange,
         label = label,
         keyboardOptions = keyboardOptions.copy(
-            keyboardType = KeyboardType.Email
+            keyboardType = KeyboardType.Email,
+            autoCorrect = true
         ),
         keyboardActions = keyboardActions,
         isError = isError,

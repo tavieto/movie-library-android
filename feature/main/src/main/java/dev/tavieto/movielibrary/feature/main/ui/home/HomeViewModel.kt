@@ -3,6 +3,8 @@ package dev.tavieto.movielibrary.feature.main.ui.home
 import androidx.lifecycle.ViewModel
 import dev.tavieto.movielibrary.core.commons.enums.MovieListType
 import dev.tavieto.movielibrary.core.delegate.useCase
+import dev.tavieto.movielibrary.domain.auth.usecase.GetTmdbRequestToken
+import dev.tavieto.movielibrary.domain.auth.usecase.GetUserNameUseCase
 import dev.tavieto.movielibrary.domain.auth.usecase.SignOutUseCase
 import dev.tavieto.movielibrary.domain.movie.model.MovieParams
 import dev.tavieto.movielibrary.domain.movie.usecase.GetMoviesByTypeUseCase
@@ -22,6 +24,8 @@ class HomeViewModel(
 
     private val getMovieUseCase: GetMoviesByTypeUseCase by useCase()
     private val signOutUseCase: SignOutUseCase by useCase()
+    private val getTmdbRequestToken: GetTmdbRequestToken by useCase()
+    private val getUserNameUseCase: GetUserNameUseCase by useCase()
 
     fun getMovies(movieType: MovieListType) {
         getMovieUseCase(
@@ -47,6 +51,14 @@ class HomeViewModel(
                         }
                     }
 
+                    MovieListType.FAVORITE -> {
+                        _state.update {
+                            it.copy(
+                                favoritesMovies = newMovies.mapFromDomain()
+                            )
+                        }
+                    }
+
                     else -> {
 
                     }
@@ -68,5 +80,31 @@ class HomeViewModel(
 
     fun initialize() {
         _state.update { it.copy(isInitialized = true) }
+    }
+
+    fun getTmdbRequestToken() {
+        getTmdbRequestToken(
+            onSuccess = { token ->
+                _state.update {
+                    it.copy(tmdbRequestToken = token)
+                }
+            },
+            onFailure = {
+                _state.update {
+                    it.copy(tmdbRequestToken = null)
+                }
+            }
+        )
+    }
+
+    fun getUserName() {
+        getUserNameUseCase(
+            onSuccess = { name ->
+                _state.update { it.copy(userName = name) }
+            },
+            onFailure = {
+                _state.update { it.copy(userName = "error") }
+            }
+        )
     }
 }

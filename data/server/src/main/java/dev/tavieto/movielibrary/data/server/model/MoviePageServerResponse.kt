@@ -2,9 +2,9 @@ package dev.tavieto.movielibrary.data.server.model
 
 import com.google.gson.annotations.SerializedName
 
-data class MoviePageResponse(
+data class MoviePageServerResponse(
     @SerializedName("dates")
-    val dates: DatesResponse,
+    val dates: DatesServerResponse,
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")
