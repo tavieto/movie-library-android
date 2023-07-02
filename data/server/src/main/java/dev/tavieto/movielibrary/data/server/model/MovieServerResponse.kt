@@ -2,6 +2,7 @@ package dev.tavieto.movielibrary.data.server.model
 
 
 import com.google.gson.annotations.SerializedName
+
 import dev.tavieto.movielibrary.data.remote.model.MovieResponse
 
 data class MovieServerResponse(
@@ -22,7 +23,7 @@ data class MovieServerResponse(
     @SerializedName("vote_average")
     val voteAverage: Double
 ) {
-    fun mapToRemote(): MovieResponse {
+    fun mapToRemote(isFavorite: Boolean): MovieResponse {
         return MovieResponse(
             adult = this.adult,
             genreIds = this.genreIds,
@@ -31,7 +32,8 @@ data class MovieServerResponse(
             posterPath = this.posterPath,
             releaseDate = this.releaseDate,
             title = this.title,
-            voteAverage = this.voteAverage
+            voteAverage = this.voteAverage,
+            isFavorite = isFavorite
         )
     }
 }

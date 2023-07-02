@@ -44,7 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import dev.tavieto.movielibrary.core.commons.enums.MovieListType
+
 import dev.tavieto.movielibrary.feature.main.BuildConfig
 import dev.tavieto.movielibrary.feature.main.R
 import dev.tavieto.movielibrary.feature.main.ui.component.MovieItem
@@ -157,7 +157,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
                                 )
                             }
 
-                            1 -> items(state.popularMovies) { movie ->
+                            1 -> items(state.movies) { movie ->
                                 MovieItem(
                                     modifier = Modifier.clickable {
                                         viewModel.navigateToDetails(movie)
@@ -186,13 +186,10 @@ fun HomeScreen(viewModel: HomeViewModel) {
     }
 
     LaunchedEffect(Unit) {
-        if (state.isInitialized.not()) {
-            viewModel.getMovies(MovieListType.NOW_PLAYING)
-            viewModel.getMovies(MovieListType.POPULAR)
-            viewModel.getMovies(MovieListType.FAVORITE)
-            viewModel.getUserName()
-            viewModel.initialize()
-        }
+        viewModel.getMovies()
+        viewModel.getFavoriteMovies()
+        viewModel.getNowPlayingMovies()
+        viewModel.getUserName()
         viewModel.getTmdbRequestToken()
     }
 }

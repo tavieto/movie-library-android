@@ -10,7 +10,7 @@ import dev.tavieto.movielibrary.domain.movie.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
-class GetMoviesByTypeUseCase(
+class GetFavoriteMovieListUseCase(
     scope: CoroutineScope,
     private val repository: MovieRepository
 ) : UseCase<MovieParams, MovieListDomain>(scope) {
@@ -18,6 +18,6 @@ class GetMoviesByTypeUseCase(
         if (params == null) throw MissingParamsException()
         if (params.page <= 0) throw InvalidParameterException()
 
-        return repository.getMovieList(params.type, params.page)
+        return repository.getMovieList(params.page)
     }
 }

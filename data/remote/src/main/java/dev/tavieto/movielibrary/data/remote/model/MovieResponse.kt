@@ -10,7 +10,8 @@ data class MovieResponse(
     val posterPath: String,
     val releaseDate: String,
     val title: String,
-    val voteAverage: Double
+    val voteAverage: Double,
+    val isFavorite: Boolean
 ) {
     fun mapToRepository(): MovieData {
         return MovieData(
@@ -21,7 +22,8 @@ data class MovieResponse(
             posterPath = this.posterPath,
             releaseDate = this.releaseDate,
             title = this.title,
-            voteAverage = this.voteAverage
+            voteAverage = this.voteAverage,
+            isFavorite = isFavorite
         )
     }
 }

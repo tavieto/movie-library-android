@@ -1,7 +1,7 @@
 package dev.tavieto.movielibrary.domain.movie.repository
 
 import dev.tavieto.movielibrary.core.commons.base.Either
-import dev.tavieto.movielibrary.core.commons.enums.MovieListType
+
 import dev.tavieto.movielibrary.domain.movie.model.MovieListDomain
 import kotlinx.coroutines.flow.Flow
 
@@ -10,4 +10,11 @@ interface MovieRepository {
         movieListType: MovieListType,
         page: Int
     ): Flow<Either<MovieListDomain>>
+
+    suspend fun getMovieList(page: Int): Flow<Either<MovieListDomain>>
+
+    suspend fun updateFavoriteMovie(
+        movieId: Int,
+        isFavorite: Boolean
+    ): Flow<Either<Unit>>
 }

@@ -1,11 +1,19 @@
 package dev.tavieto.movielibrary.domain.movie.di
 
-import dev.tavieto.movielibrary.domain.movie.usecase.GetMoviesByTypeUseCase
+import dev.tavieto.movielibrary.domain.movie.usecase.GetFavoriteMovieListUseCase
+import dev.tavieto.movielibrary.domain.movie.usecase.GetMovieListUseCase
+import dev.tavieto.movielibrary.domain.movie.usecase.GetNowPlayingMovieListUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.dsl.module
 
 val movieDomainModule = module {
     factory { (scope: CoroutineScope) ->
-        GetMoviesByTypeUseCase(scope, get())
+        GetMovieListUseCase(scope, get())
+    }
+    factory { (scope: CoroutineScope) ->
+        GetFavoriteMovieListUseCase(scope, get())
+    }
+    factory { (scope: CoroutineScope) ->
+        GetNowPlayingMovieListUseCase(scope, get())
     }
 }

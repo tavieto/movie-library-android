@@ -4,6 +4,6 @@ import dev.tavieto.movielibrary.data.remote.model.MoviesResponse
 
 typealias MoviesServerResponse = List<MovieServerResponse>
 
-fun MoviesServerResponse.mapToRemote(): MoviesResponse {
-    return this.map { it.mapToRemote() }
+internal fun MoviesServerResponse.mapToRemote(isFavorite: Boolean = false): MoviesResponse {
+    return this.map { it.mapToRemote(isFavorite) }
 }

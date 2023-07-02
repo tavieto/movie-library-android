@@ -1,7 +1,10 @@
 package dev.tavieto.movielibrary.data.server.retrofit
 
+import dev.tavieto.movielibrary.data.server.model.FavoriteMediaServerRequest
+import dev.tavieto.movielibrary.data.server.model.FavoriteMediaServerResponse
 import dev.tavieto.movielibrary.data.server.model.MoviePageServerResponse
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -14,6 +17,13 @@ interface MovieRetrofitService {
         @Query("page") page: Int,
         @Query("language") language: String = "pt-BR"
     ): Call<MoviePageServerResponse>
+
+    @POST("/3/account/{account_id}/favorite")
+    fun postFavoriteMovie(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Body favorite: FavoriteMediaServerRequest
+    ): Call<FavoriteMediaServerResponse>
 
     @GET("/3/account/{account_id}/favorite/movies")
     fun getFavoriteMovies(
