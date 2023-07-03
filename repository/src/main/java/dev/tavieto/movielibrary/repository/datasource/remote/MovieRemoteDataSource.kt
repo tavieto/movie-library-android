@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface MovieRemoteDataSource {
     suspend fun getMovieList(
-        movieListType: MovieListType,
         sessionId: String,
-        page: Int
+        page: Int,
+        onlyNowPlaying: Boolean
     ): Flow<Either<MoviesData>>
 
     suspend fun getFavoriteMovieList(

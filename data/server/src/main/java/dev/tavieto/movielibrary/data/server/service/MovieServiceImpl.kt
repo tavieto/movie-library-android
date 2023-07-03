@@ -16,15 +16,15 @@ internal class MovieServiceImpl(
     private val service: MovieRetrofitService
 ) : MovieService {
     override suspend fun getMovieList(
-        movieListType: MovieListType,
         page: Int,
-        sessionId: String
+        sessionId: String,
+        onlyNowPlaying: Boolean
     ): Flow<Either<MoviesResponse>> = flow {
         emit(
             runCatchSuspendData {
                 NetworkWrapper {
                     service.getMovieList(
-                        movieListType = movieListType.id,
+                        movieListType = if (onlyNowPlaying) "popular" else "now_playing",
                         page = page,
                         language = "pt-BR"
                     )

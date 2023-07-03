@@ -9,6 +9,5 @@ interface MovieLocalDataSource {
     fun updateFavoriteMovies(movieId: Int, isFavorite: Boolean)
     fun getMovies(): MoviesData
     fun getFavoriteMovies(): MoviesData
-    fun getNowPLayingMovies(): MoviesData
     fun getLastPage(): Flow<Int>
 }

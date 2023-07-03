@@ -18,6 +18,6 @@ class GetFavoriteMovieListUseCase(
         if (params == null) throw MissingParamsException()
         if (params.page <= 0) throw InvalidParameterException()
 
-        return repository.getMovieList(params.page)
+        return repository.getFavoriteMovieList(params.page)
     }
 }

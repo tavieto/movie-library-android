@@ -21,24 +21,21 @@ internal class MovieRepositoryImpl(
     private val authLocal: AuthLocalDataSource
 ) : MovieRepository {
 
-    override suspend fun getMovieList(
-        movieListType: MovieListType,
-        page: Int
-    ): Flow<Either<MovieListDomain>> {
+    override suspend fun getMovieList(page: Int): Flow<Either<MovieListDomain>> {
         return channelFlow {
-            val localMovies = local.getMovies(movieListType)
+            val localMovies = local.getMovies()
             val lastPage = local.getLastPage().first()
             val sessionId = authLocal.getUser().first()?.tmdbSessionId ?: ""
             if (localMovies.isEmpty()) {
                 remote.getMovieList(
-                    movieListType = movieListType,
                     page = lastPage + 1,
-                    sessionId = sessionId
+                    sessionId = sessionId,
+                    onlyNowPlaying = false
                 ).collectLatest { result ->
                     trySend(
                         result.mapCatching {
-                            local.saveMovies(movieListType, it)
-                            local.getMovies(movieListType).mapToDomain()
+                            local.saveMovies(it)
+                            local.getMovies().mapToDomain()
                         }
                     )
                 }
@@ -49,7 +46,7 @@ internal class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getMovieList(page: Int): Flow<Either<MovieListDomain>> {
+    override suspend fun getFavoriteMovieList(page: Int): Flow<Either<MovieListDomain>> {
         return channelFlow {
             val localMovies = local.getFavoriteMovies()
             val lastPage = local.getLastPage().first()
@@ -61,13 +58,36 @@ internal class MovieRepositoryImpl(
                 ).collectLatest { result ->
                     trySend(
                         result.mapCatching {
-                            local.saveMovies(movieListType, it)
-                            local.getMovies(movieListType).mapToDomain()
+                            local.saveMovies(it)
+                            for (movie in it) {
+                                local.updateFavoriteMovies(movie.id, isFavorite = true)
+                            }
+                            local.getMovies().mapToDomain()
                         }
                     )
                 }
             } else {
                 trySend(Either.Success(localMovies.mapToDomain()))
+            }
+            awaitClose()
+        }
+    }
+
+    override suspend fun getNowPlayingMovieList(page: Int): Flow<Either<MovieListDomain>> {
+        return channelFlow {
+            val lastPage = local.getLastPage().first()
+            val sessionId = authLocal.getUser().first()?.tmdbSessionId ?: ""
+            remote.getMovieList(
+                page = lastPage + 1,
+                sessionId = sessionId,
+                onlyNowPlaying = true
+            ).collectLatest { result ->
+                trySend(
+                    result.mapCatching {
+                        local.saveMovies(it)
+                        it.mapToDomain()
+                    }
+                )
             }
             awaitClose()
         }

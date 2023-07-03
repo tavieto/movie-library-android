@@ -17,11 +17,11 @@ internal class MovieRemoteDataSourceImpl(
 ) : MovieRemoteDataSource {
 
     override suspend fun getMovieList(
-        movieListType: MovieListType,
         sessionId: String,
-        page: Int
+        page: Int,
+        onlyNowPlaying: Boolean
     ): Flow<Either<MoviesData>> = channelFlow {
-        service.getMovieList(movieListType, page, sessionId).collectLatest {
+        service.getMovieList(page, sessionId, onlyNowPlaying).collectLatest {
             trySend(it.mapCatching { response -> response.mapToRepository() })
         }
         awaitClose()

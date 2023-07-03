@@ -40,10 +40,6 @@ internal class MovieLocalDataSourceImpl(
         return dao.getFavoriteMovies().mapToRepository()
     }
 
-    override fun getNowPLayingMovies(): MoviesData {
-        TODO("Not yet implemented")
-    }
-
     override fun getLastPage(): Flow<Int> {
         return context.movieDataStore.data.map { preferences ->
 

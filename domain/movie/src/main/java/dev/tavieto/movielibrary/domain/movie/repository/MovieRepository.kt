@@ -6,12 +6,10 @@ import dev.tavieto.movielibrary.domain.movie.model.MovieListDomain
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
-    suspend fun getMovieList(
-        movieListType: MovieListType,
-        page: Int
-    ): Flow<Either<MovieListDomain>>
-
     suspend fun getMovieList(page: Int): Flow<Either<MovieListDomain>>
+
+    suspend fun getFavoriteMovieList(page: Int): Flow<Either<MovieListDomain>>
+    suspend fun getNowPlayingMovieList(page: Int): Flow<Either<MovieListDomain>>
 
     suspend fun updateFavoriteMovie(
         movieId: Int,

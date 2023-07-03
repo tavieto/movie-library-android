@@ -17,9 +17,6 @@ interface MovieDao {
     @Query(value = "SELECT * FROM movies WHERE is_favorite")
     fun getFavoriteMovies(): List<MovieEntity>
 
-    @Query(value = "SELECT * FROM movies WHERE now_playing")
-    fun getFavoriteMovies(): List<MovieEntity>
-
     @Query(value = "UPDATE movies SET is_favorite = :isFavorite WHERE id = :movieId")
     fun updateFavoriteMovies(movieId: Int, isFavorite: Boolean)
 }
