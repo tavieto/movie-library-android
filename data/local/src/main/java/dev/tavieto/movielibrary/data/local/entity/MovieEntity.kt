@@ -21,7 +21,7 @@ data class MovieEntity(
     val voteAverage: Double,
     @ColumnInfo(name = "is_favorite")
     val isFavorite: Boolean,
-    @ColumnInfo(name = "is_favorite")
+    @ColumnInfo(name = "now_playing")
     val nowPlaying: Boolean
 ) {
     fun mapToRepository(): MovieData {

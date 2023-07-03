@@ -16,9 +16,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -29,14 +32,15 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ExitToApp
-import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import dev.tavieto.movielibrary.core.uikit.components.SearchTextField
 import dev.tavieto.movielibrary.feature.main.BuildConfig
 import dev.tavieto.movielibrary.feature.main.R
 import dev.tavieto.movielibrary.feature.main.model.MovieListModel
@@ -54,6 +59,9 @@ import dev.tavieto.movielibrary.feature.main.ui.component.MovieItem
 fun HomeScreen(viewModel: HomeViewModel) {
     val state by viewModel.state.collectAsState()
     val activity = LocalContext.current as Activity
+    var showInputSearch by remember {
+        mutableStateOf(false)
+    }
     val tabsText = remember {
         mutableStateListOf("Em exibição", "Filmes", "Favoritos")
     }
@@ -100,12 +108,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     IconButton(
-                        onClick = { }
-                    ) {
-                        Icon(imageVector = Icons.Rounded.Notifications, contentDescription = null)
-                    }
-                    IconButton(
-                        onClick = { }
+                        onClick = { showInputSearch = showInputSearch.not() }
                     ) {
                         Icon(imageVector = Icons.Rounded.Search, contentDescription = null)
                     }
@@ -125,68 +128,89 @@ fun HomeScreen(viewModel: HomeViewModel) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TabRow(selectedTabIndex = state.tabIndex) {
-                tabsText.forEachIndexed { index, text ->
-                    Tab(
-                        selected = state.tabIndex == index,
-                        onClick = {
-                            if (state.tabIndex != index) {
-                                viewModel.updateTabIndex(index)
-                            }
-                        },
-                        text = {
-                            Text(text = text)
-                        }
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            AnimatedVisibility(visible = state.tmdbRequestToken != null) {
-                TextButton(
-                    onClick = {
-                        val url = BuildConfig.TMDB_URL_AUTH + state.tmdbRequestToken
-                        val urlQuery =
-                            "?redirect_to=" + "tavietodev://movielibrary.app/tmdb-approved"
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(url + urlQuery)
-                        activity.startActivity(intent)
+            if (showInputSearch) {
+                SearchTextField(
+                    label = "Search",
+                    value = state.searchText,
+                    onValueChange = { viewModel.setSearchText(it) }
+                )
+
+                LazyColumn {
+                    items(items = state.resultSearch) {
+                        ResultSearchItem(title = it.title, imageUrl = it.posterPath)
                     }
+
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Connect with your TMDB account")
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
+                    TabRow(selectedTabIndex = state.tabIndex) {
+                        tabsText.forEachIndexed { index, text ->
+                            Tab(
+                                selected = state.tabIndex == index,
+                                onClick = {
+                                    if (state.tabIndex != index) {
+                                        viewModel.updateTabIndex(index)
+                                    }
+                                },
+                                text = {
+                                    Text(text = text)
+                                }
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    AnimatedVisibility(visible = state.tmdbRequestToken != null) {
+                        TextButton(
+                            onClick = {
+                                val url = BuildConfig.TMDB_URL_AUTH + state.tmdbRequestToken
+                                val urlQuery =
+                                    "?redirect_to=" + "tavietodev://movielibrary.app/tmdb-approved"
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse(url + urlQuery)
+                                activity.startActivity(intent)
+                            }
+                        ) {
+                            Text(text = "Connect with your TMDB account")
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            when (state.tabIndex) {
-                0 -> {
-                    Grid(
-                        movies = state.nowPlayingMovies,
-                        onClick = viewModel::navigateToDetails
-                    )
-                }
+                    when (state.tabIndex) {
+                        0 -> {
+                            Grid(
+                                movies = state.nowPlayingMovies,
+                                onClick = viewModel::navigateToDetails
+                            )
+                        }
 
-                1 -> {
-                    Grid(
-                        movies = state.movies,
-                        onClick = viewModel::navigateToDetails
-                    )
-                }
+                        1 -> {
+                            Grid(
+                                movies = state.movies,
+                                onClick = viewModel::navigateToDetails
+                            )
+                        }
 
-                else -> {
-                    if (state.tmdbRequestToken != null) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            text = "Connect your TMDB account to see your favorites!",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h6
-                        )
-                    } else {
-                        Grid(
-                            movies = state.favoritesMovies,
-                            onClick = viewModel::navigateToDetails
-                        )
+                        else -> {
+                            if (state.tmdbRequestToken != null) {
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    text = "Connect your TMDB account to see your favorites!",
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.h6
+                                )
+                            } else {
+                                Grid(
+                                    movies = state.favoritesMovies,
+                                    onClick = viewModel::navigateToDetails
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -226,4 +250,19 @@ private fun Grid(
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     )
+}
+
+@Composable
+private fun ResultSearchItem(
+    title: String,
+    imageUrl: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MovieItem(moviePosterPath = imageUrl, height = 200.dp)
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(text = title, style = MaterialTheme.typography.h6)
+    }
 }

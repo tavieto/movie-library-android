@@ -122,4 +122,13 @@ class HomeViewModel(
     fun updateTabIndex(newIndex: Int) {
         _state.update { it.copy(tabIndex = newIndex) }
     }
+
+    fun setSearchText(text: String) {
+        _state.update {
+            it.copy(
+                searchText = text,
+                resultSearch = it.movies.filter { movie -> movie.title.contains(text) }
+            )
+        }
+    }
 }
