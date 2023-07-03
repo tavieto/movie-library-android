@@ -42,6 +42,7 @@ class HomeViewModel(
                 }
             },
             onFailure = { error ->
+                error.printStackTrace()
                 _state.update { it.copy(error = error) }
             }
         )
@@ -59,6 +60,7 @@ class HomeViewModel(
             },
             onFailure = { error ->
                 _state.update { it.copy(error = error) }
+                error.printStackTrace()
             }
         )
     }
@@ -109,6 +111,7 @@ class HomeViewModel(
             },
             onFailure = {
                 _state.update { it.copy(userName = "error") }
+                it.printStackTrace()
             }
         )
     }

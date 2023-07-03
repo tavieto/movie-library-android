@@ -8,10 +8,6 @@ import dev.tavieto.movielibrary.data.remote.model.MovieResponse
 data class MovieServerResponse(
     @SerializedName("id")
     val id: Int,
-    @SerializedName("adult")
-    val adult: Boolean,
-    @SerializedName("genre_ids")
-    val genreIds: List<Int>,
     @SerializedName("overview")
     val overview: String,
     @SerializedName("poster_path")
@@ -25,8 +21,6 @@ data class MovieServerResponse(
 ) {
     fun mapToRemote(isFavorite: Boolean): MovieResponse {
         return MovieResponse(
-            adult = this.adult,
-            genreIds = this.genreIds,
             id = this.id,
             overview = this.overview,
             posterPath = this.posterPath,

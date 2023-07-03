@@ -8,8 +8,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MovieModel(
     val id: Int,
-    val adult: Boolean,
-    val genreIds: List<Int>,
     val overview: String,
     val posterPath: String,
     val releaseDate: String,
@@ -21,8 +19,6 @@ data class MovieModel(
 internal fun MovieDomain.mapFromDomain(): MovieModel {
     return MovieModel(
         id = this.id,
-        adult = this.adult,
-        genreIds = this.genreIds,
         overview = this.overview,
         posterPath = BuildConfig.TMDB_API_BASE_URL_IMAGES + this.posterPath,
         releaseDate = this.releaseDate,

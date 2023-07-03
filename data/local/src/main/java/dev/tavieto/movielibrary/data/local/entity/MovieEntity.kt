@@ -9,8 +9,6 @@ import dev.tavieto.movielibrary.repository.model.MovieData
 data class MovieEntity(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
-    @ColumnInfo(name = "adult")
-    val adult: Boolean,
     @ColumnInfo(name = "overview")
     val overview: String,
     @ColumnInfo(name = "poster_path")
@@ -27,7 +25,6 @@ data class MovieEntity(
     fun mapToRepository(): MovieData {
         return MovieData(
             id = this.id,
-            adult = this.adult,
             overview = this.overview,
             posterPath = this.posterPath,
             releaseDate = this.releaseDate,
@@ -43,7 +40,6 @@ internal fun List<MovieEntity>.mapToRepository() = this.map { it.mapToRepository
 internal fun MovieData.mapToEntity(): MovieEntity {
     return MovieEntity(
         id = this.id,
-        adult = this.adult,
         overview = this.overview,
         posterPath = this.posterPath,
         releaseDate = this.releaseDate,

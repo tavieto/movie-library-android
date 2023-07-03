@@ -4,8 +4,6 @@ import dev.tavieto.movielibrary.repository.model.MovieData
 
 data class MovieResponse(
     val id: Int,
-    val adult: Boolean,
-    val genreIds: List<Int>,
     val overview: String,
     val posterPath: String,
     val releaseDate: String,
@@ -15,8 +13,6 @@ data class MovieResponse(
 ) {
     fun mapToRepository(): MovieData {
         return MovieData(
-            adult = this.adult,
-            genreIds = this.genreIds,
             id = this.id,
             overview = this.overview,
             posterPath = this.posterPath,

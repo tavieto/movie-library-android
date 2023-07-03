@@ -18,6 +18,6 @@ class GetNowPlayingMovieListUseCase(
         if (params == null) throw MissingParamsException()
         if (params.page <= 0) throw InvalidParameterException()
 
-        return repository.getFavoriteMovieList(params.page)
+        return repository.getNowPlayingMovieList(params.page)
     }
 }
