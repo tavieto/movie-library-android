@@ -1,4 +1,4 @@
-# movie-library-android
+# Movie Library
 
 Para utilizar o projeto é necessário criar um projeto firebase e adicionar o arquivo google-services.json na pasta do app, com Firebase Firestore criado com uma collection nomeada como "user" e o Firebase Authentication ativado com login por e-mail e senha.
 
