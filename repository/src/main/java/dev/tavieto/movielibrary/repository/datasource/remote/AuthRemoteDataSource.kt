@@ -10,4 +10,5 @@ interface AuthRemoteDataSource {
     suspend fun signOut(): Flow<Either<Unit>>
     suspend fun getRequestToken(): Flow<Either<String>>
     suspend fun getSessionId(requestToken: String): Flow<Either<String>>
+    suspend fun getAccountId(data: String): Flow<Either<Int>>
 }

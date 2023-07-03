@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dev.tavieto.movielibrary.repository.datasource.local.AuthLocalDataSource
@@ -20,6 +21,7 @@ internal class AuthLocalDataSourceImpl(
         val NAME = stringPreferencesKey("name_user")
         val EMAIL = stringPreferencesKey("email_user")
         val TMDB_SESSION_ID = stringPreferencesKey("session_id_user")
+        val TMDB_ACCOUNT_ID = intPreferencesKey("account_id_user")
     }
 
     private val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
@@ -29,7 +31,13 @@ internal class AuthLocalDataSourceImpl(
             it[UserKey.ID] = user.id
             it[UserKey.NAME] = user.name
             it[UserKey.EMAIL] = user.email
-            it[UserKey.TMDB_SESSION_ID] = user.tmdbSessionId
+
+            if (user.tmdbSessionId != null) {
+                it[UserKey.TMDB_SESSION_ID] = user.tmdbSessionId!!
+            }
+            if (user.tmdbAccountId != null) {
+                it[UserKey.TMDB_ACCOUNT_ID] = user.tmdbAccountId!!
+            }
         }
     }
 
@@ -39,18 +47,26 @@ internal class AuthLocalDataSourceImpl(
         }
     }
 
+    override suspend fun saveAccountId(accountId: Int) {
+        context.userDataStore.edit {
+            it[UserKey.TMDB_ACCOUNT_ID] = accountId
+        }
+    }
+
     override suspend fun getUser(): Flow<UserData?> {
         return context.userDataStore.data.map {
             val id = it[UserKey.ID] ?: return@map null
             val name = it[UserKey.NAME] ?: return@map null
             val email = it[UserKey.EMAIL] ?: return@map null
             val sessionId = it[UserKey.TMDB_SESSION_ID] ?: return@map null
+            val accountId = it[UserKey.TMDB_ACCOUNT_ID] ?: return@map null
 
             return@map UserData(
                 id = id,
                 name = name,
                 email = email,
-                tmdbSessionId = sessionId
+                tmdbSessionId = sessionId,
+                tmdbAccountId = accountId
             )
         }
     }

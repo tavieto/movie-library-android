@@ -22,7 +22,7 @@ import dev.tavieto.movielibrary.core.navigation.routes.MainRoutes
 import dev.tavieto.movielibrary.core.uikit.theme.MovieLibraryTheme
 import dev.tavieto.movielibrary.data.local.manager.LocalSessionManager
 import dev.tavieto.movielibrary.data.local.manager.SessionState
-import dev.tavieto.movielibrary.domain.auth.usecase.SaveRequestIdUseCase
+import dev.tavieto.movielibrary.domain.auth.usecase.GetTmbdAccountInfoUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,14 +35,14 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
     private val navManager: NavigationManager by inject()
     private val localSessionManager: LocalSessionManager by inject()
-    private val saveRequestIdUseCase: SaveRequestIdUseCase by inject {
+    private val getTmbdAccountInfoUseCase: GetTmbdAccountInfoUseCase by inject {
         parametersOf(lifecycleScope + Dispatchers.IO)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         val requestId = intent?.data?.getQueryParameter("request_token")
-        saveRequestIdUseCase(
+        getTmbdAccountInfoUseCase(
             params = requestId,
             onSuccess = {
                 runOnUiThread {

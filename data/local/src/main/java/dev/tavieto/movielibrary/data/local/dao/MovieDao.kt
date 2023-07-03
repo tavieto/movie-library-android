@@ -19,4 +19,10 @@ interface MovieDao {
 
     @Query(value = "UPDATE movies SET is_favorite = :isFavorite WHERE id = :movieId")
     fun updateFavoriteMovies(movieId: Int, isFavorite: Boolean)
+
+    @Query(value = "UPDATE movies SET now_playing = false")
+    fun deleteNowPlayingMark()
+
+    @Query(value = "DELETE FROM movies")
+    fun deleteAll()
 }

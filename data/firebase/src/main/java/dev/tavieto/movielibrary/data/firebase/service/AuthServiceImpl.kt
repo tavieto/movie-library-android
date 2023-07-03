@@ -33,7 +33,8 @@ internal class AuthServiceImpl : AuthService {
                                 id = user.getString(ID_PARAM) ?: "",
                                 name = user.getString(NAME_PARAM) ?: "",
                                 email = user.getString(EMAIL_PARAM) ?: "",
-                                tmdbSessionId = user.getString("tmdb_session_id") ?: ""
+                                tmdbSessionId = user.getString(TMDB_SESSION_ID) ?: "",
+                                tmdbAccountId = user.getLong(TMDB_ACCOUNT_ID)?.toInt() ?: -1
                             )
                             trySend(Either.Success(userResponse))
                         }
@@ -76,7 +77,8 @@ internal class AuthServiceImpl : AuthService {
                                         id = user.getString(ID_PARAM) ?: "",
                                         name = user.getString(NAME_PARAM) ?: "",
                                         email = user.getString(EMAIL_PARAM) ?: "",
-                                        tmdbSessionId = user.getString(TMDB_SESSION_ID) ?: ""
+                                        tmdbSessionId = user.getString(TMDB_SESSION_ID) ?: "",
+                                        tmdbAccountId = user.getLong(TMDB_ACCOUNT_ID)?.toInt() ?: -1
                                     )
                                     trySend(Either.Success(userResponse))
                                 }
@@ -140,11 +142,43 @@ internal class AuthServiceImpl : AuthService {
         awaitClose()
     }
 
+    override suspend fun saveAccountId(accountId: Int): Flow<Either<Unit>> {
+        return callbackFlow {
+            val user = auth.currentUser
+
+            if (user != null) {
+                val doc = firestore.collection(USER_COLLECTION).document(user.uid)
+                doc.get()
+                    .addOnSuccessListener {
+                        it.data?.let { result ->
+                            val data = HashMap<String, Any>(result)
+                            data[TMDB_ACCOUNT_ID] = accountId
+                            doc.set(data)
+                                .addOnSuccessListener {
+                                    trySend(Either.Success(Unit))
+                                }
+                                .addOnFailureListener { error ->
+                                    trySend(Either.Failure(error))
+                                }
+                        } ?: trySend(Either.Failure(Throwable("Empty user")))
+                    }
+                    .addOnFailureListener {
+                        trySend(Either.Failure(it))
+                    }
+
+            } else {
+                trySend(Either.Failure(Throwable("There's no user")))
+            }
+            awaitClose()
+        }
+    }
+
     private companion object {
         const val USER_COLLECTION = "user"
         const val ID_PARAM = "id"
         const val NAME_PARAM = "name"
         const val EMAIL_PARAM = "email"
         const val TMDB_SESSION_ID = "tmdb_session_id"
+        const val TMDB_ACCOUNT_ID = "tmdb_account_id"
     }
 }

@@ -14,12 +14,14 @@ interface MovieRemoteDataSource {
 
     suspend fun getFavoriteMovieList(
         sessionId: String,
-        page: Int
+        page: Int,
+        accountId: Int
     ): Flow<Either<MoviesData>>
 
     suspend fun updateFavoriteMovie(
         isFavorite: Boolean,
         sessionId: String,
-        movieId: Int
+        movieId: Int,
+        accountId: Int
     ): Flow<Either<Unit>>
 }

@@ -6,6 +6,7 @@ import dev.tavieto.movielibrary.core.commons.exception.EmptyNameException
 import dev.tavieto.movielibrary.core.commons.exception.UserAlreadyHasSessionIdException
 import dev.tavieto.movielibrary.domain.auth.repository.AuthRepository
 import dev.tavieto.movielibrary.repository.datasource.local.AuthLocalDataSource
+import dev.tavieto.movielibrary.repository.datasource.local.MovieLocalDataSource
 import dev.tavieto.movielibrary.repository.datasource.local.SessionLocalDataSource
 import dev.tavieto.movielibrary.repository.datasource.remote.AuthRemoteDataSource
 import dev.tavieto.movielibrary.repository.model.SessionData
@@ -17,7 +18,8 @@ import kotlinx.coroutines.flow.collectLatest
 internal class AuthRepositoryImpl(
     private val remote: AuthRemoteDataSource,
     private val local: AuthLocalDataSource,
-    private val session: SessionLocalDataSource
+    private val session: SessionLocalDataSource,
+    private val localMovies: MovieLocalDataSource
 ) : AuthRepository {
 
     override suspend fun signIn(
@@ -51,6 +53,7 @@ internal class AuthRepositoryImpl(
         return remote.signOut().also {
             local.deleteUser()
             session.deleteSession()
+            localMovies.deleteAll()
         }
     }
 
@@ -67,16 +70,25 @@ internal class AuthRepositoryImpl(
         awaitClose()
     }
 
-    override suspend fun saveSessionId(requestToken: String): Flow<Either<Unit>> = channelFlow {
-        remote.getSessionId(requestToken = requestToken).collectLatest { result ->
-            when (result) {
-                is Either.Success -> {
-                    local.saveSessionId(result.data)
-                    trySend(Either.Success(Unit))
-                }
+    override suspend fun getTmbdAccountInfo(requestToken: String): Flow<Either<Unit>> =
+        channelFlow {
+            remote.getSessionId(requestToken = requestToken).collectLatest { sessionIdResult ->
+                when (sessionIdResult) {
+                    is Either.Success -> {
+                        local.saveSessionId(sessionIdResult.data)
+                        remote.getAccountId(sessionIdResult.data).collectLatest { accountIdResult ->
+                            when (accountIdResult) {
+                                is Either.Failure -> trySend(accountIdResult)
+                                is Either.Success -> {
+                                    local.saveAccountId(accountIdResult.data)
+                                    trySend(Either.Success(Unit))
+                                }
+                            }
+                        }
+                    }
 
                 is Either.Failure -> {
-                    trySend(result)
+                    trySend(sessionIdResult)
                 }
             }
         }

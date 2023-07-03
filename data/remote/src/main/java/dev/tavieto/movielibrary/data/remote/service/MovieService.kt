@@ -14,12 +14,14 @@ interface MovieService {
 
     suspend fun getFavoriteMovieList(
         page: Int,
-        sessionId: String
+        sessionId: String,
+        accountId: Int
     ): Flow<Either<MoviesResponse>>
 
     suspend fun postFavoriteMovie(
         isFavorite: Boolean,
         sessionId: String,
-        movieId: Int
+        movieId: Int,
+        accountId: Int
     ): Flow<Either<Unit>>
 }

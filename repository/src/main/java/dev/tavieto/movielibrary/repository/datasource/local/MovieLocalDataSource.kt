@@ -10,4 +10,6 @@ interface MovieLocalDataSource {
     fun getMovies(): MoviesData
     fun getFavoriteMovies(): MoviesData
     fun getLastPage(): Flow<Int>
+
+    suspend fun deleteAll()
 }

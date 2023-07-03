@@ -1,12 +1,15 @@
 package dev.tavieto.movielibrary.data.server.service
 
 import dev.tavieto.movielibrary.core.commons.base.Either
+import dev.tavieto.movielibrary.core.commons.base.mapCatching
 import dev.tavieto.movielibrary.core.commons.base.runCatchSuspendData
 import dev.tavieto.movielibrary.data.remote.service.TmbdService
 import dev.tavieto.movielibrary.data.server.core.NetworkWrapper
 import dev.tavieto.movielibrary.data.server.model.RequestTokenServerRequest
 import dev.tavieto.movielibrary.data.server.retrofit.TmbdAuthRetrofitService
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 
 internal class TmbdServiceImpl(
@@ -46,5 +49,17 @@ internal class TmbdServiceImpl(
                 }
             )
         }
+    }
+
+    override suspend fun getAccountId(
+        sessionId: String
+    ): Flow<Either<Int>> = channelFlow {
+        val result = runCatchSuspendData {
+            NetworkWrapper {
+                service.getAccountDetails(sessionId)
+            }
+        }
+        trySend(result.mapCatching { it.id })
+        awaitClose()
     }
 }

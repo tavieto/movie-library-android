@@ -29,9 +29,10 @@ internal class MovieRemoteDataSourceImpl(
 
     override suspend fun getFavoriteMovieList(
         sessionId: String,
-        page: Int
+        page: Int,
+        accountId: Int
     ): Flow<Either<MoviesData>> = channelFlow {
-        service.getFavoriteMovieList(page, sessionId).collectLatest {
+        service.getFavoriteMovieList(page, sessionId, accountId).collectLatest {
             trySend(it.mapCatching { response -> response.mapToRepository() })
         }
         awaitClose()
@@ -40,8 +41,9 @@ internal class MovieRemoteDataSourceImpl(
     override suspend fun updateFavoriteMovie(
         isFavorite: Boolean,
         sessionId: String,
-        movieId: Int
+        movieId: Int,
+        accountId: Int
     ): Flow<Either<Unit>> {
-        return service.postFavoriteMovie(isFavorite, sessionId, movieId)
+        return service.postFavoriteMovie(isFavorite, sessionId, movieId, accountId)
     }
 }

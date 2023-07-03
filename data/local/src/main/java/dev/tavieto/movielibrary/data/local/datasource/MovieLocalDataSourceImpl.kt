@@ -3,6 +3,7 @@ package dev.tavieto.movielibrary.data.local.datasource
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dev.tavieto.movielibrary.data.local.dao.MovieDao
@@ -45,6 +46,11 @@ internal class MovieLocalDataSourceImpl(
 
             return@map preferences[MovieKeys.pageCount] ?: return@map 0
         }
+    }
+
+    override suspend fun deleteAll() {
+        context.movieDataStore.edit { it.clear() }
+        dao.deleteAll()
     }
 
     private companion object {

@@ -4,7 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,18 +36,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-
 import dev.tavieto.movielibrary.feature.main.BuildConfig
 import dev.tavieto.movielibrary.feature.main.R
+import dev.tavieto.movielibrary.feature.main.model.MovieListModel
+import dev.tavieto.movielibrary.feature.main.model.MovieModel
 import dev.tavieto.movielibrary.feature.main.ui.component.MovieItem
 
 @Composable
@@ -54,10 +55,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
     val state by viewModel.state.collectAsState()
     val activity = LocalContext.current as Activity
     val tabsText = remember {
-        mutableStateListOf("Em cartaz", "Filmes", "Favoritos")
-    }
-    var tabIndex by remember {
-        mutableStateOf(0)
+        mutableStateListOf("Em exibição", "Filmes", "Favoritos")
     }
 
     Scaffold(
@@ -69,16 +67,33 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier.padding(start = 8.dp)
+                AnimatedVisibility(
+                    visible = state.userName.isNotBlank(),
+                    enter = fadeIn(),
+                    exit = fadeOut()
                 ) {
-                    Text(text = stringResource(id = R.string.home_screen_welcome))
-                    Text(
-                        text = state.userName,
-                        color = MaterialTheme.colors.primary,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = MaterialTheme.typography.h6.fontSize
-                    )
+                    Column(
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text(text = stringResource(id = R.string.home_screen_welcome))
+                        Text(
+                            text = state.userName,
+                            color = MaterialTheme.colors.primary,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = MaterialTheme.typography.h6.fontSize
+                        )
+                    }
+                }
+                AnimatedVisibility(
+                    visible = state.userName.isBlank(),
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text(text = "Nome indisponível")
+                    }
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -110,13 +125,13 @@ fun HomeScreen(viewModel: HomeViewModel) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TabRow(selectedTabIndex = tabIndex) {
+            TabRow(selectedTabIndex = state.tabIndex) {
                 tabsText.forEachIndexed { index, text ->
                     Tab(
-                        selected = tabIndex == index,
+                        selected = state.tabIndex == index,
                         onClick = {
-                            if (tabIndex != index) {
-                                tabIndex = index
+                            if (state.tabIndex != index) {
+                                viewModel.updateTabIndex(index)
                             }
                         },
                         text = {
@@ -141,55 +156,74 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Crossfade(targetState = tabIndex) {
-                LazyVerticalGrid(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
-                    columns = GridCells.Adaptive(90.dp),
-                    content = {
-                        when (it) {
-                            0 -> items(state.nowPlayingMovies) { movie ->
-                                MovieItem(
-                                    modifier = Modifier.clickable {
-                                        viewModel.navigateToDetails(movie)
-                                    },
-                                    moviePosterPath = movie.posterPath,
-                                    height = 150.dp
-                                )
-                            }
 
-                            1 -> items(state.movies) { movie ->
-                                MovieItem(
-                                    modifier = Modifier.clickable {
-                                        viewModel.navigateToDetails(movie)
-                                    },
-                                    moviePosterPath = movie.posterPath,
-                                    height = 150.dp
-                                )
-                            }
+            when (state.tabIndex) {
+                0 -> {
+                    Grid(
+                        movies = state.nowPlayingMovies,
+                        onClick = viewModel::navigateToDetails
+                    )
+                }
 
-                            else -> items(state.favoritesMovies) { movie ->
-                                MovieItem(
-                                    modifier = Modifier.clickable {
-                                        viewModel.navigateToDetails(movie)
-                                    },
-                                    moviePosterPath = movie.posterPath,
-                                    height = 150.dp
-                                )
-                            }
-                        }
-                    },
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                )
+                1 -> {
+                    Grid(
+                        movies = state.movies,
+                        onClick = viewModel::navigateToDetails
+                    )
+                }
+
+                else -> {
+                    if (state.tmdbRequestToken != null) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            text = "Connect your TMDB account to see your favorites!",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.h6
+                        )
+                    } else {
+                        Grid(
+                            movies = state.favoritesMovies,
+                            onClick = viewModel::navigateToDetails
+                        )
+                    }
+                }
             }
         }
     }
 
     LaunchedEffect(Unit) {
         viewModel.getMovies()
-        viewModel.getFavoriteMovies()
         viewModel.getNowPlayingMovies()
         viewModel.getUserName()
         viewModel.getTmdbRequestToken()
     }
+}
+
+@Composable
+private fun Grid(
+    movies: MovieListModel,
+    onClick: (MovieModel) -> Unit
+) {
+    LazyVerticalGrid(
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
+        columns = GridCells.Adaptive(90.dp),
+        content = {
+            items(movies) { movie ->
+                MovieItem(
+                    modifier = Modifier.clickable {
+                        onClick(movie)
+                    },
+                    moviePosterPath = movie.posterPath,
+                    height = 150.dp
+                )
+            }
+        },
+        horizontalArrangement = Arrangement.spacedBy(
+            4.dp,
+            alignment = Alignment.CenterHorizontally
+        ),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    )
 }

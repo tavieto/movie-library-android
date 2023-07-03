@@ -66,4 +66,22 @@ internal class AuthRemoteDataSourceImpl(
         }
         awaitClose()
     }
+
+    override suspend fun getAccountId(
+        sessionId: String
+    ): Flow<Either<Int>> = channelFlow {
+        tmdb.getAccountId(sessionId).collectLatest { accountIdResult ->
+            when (accountIdResult) {
+                is Either.Failure -> trySend(accountIdResult)
+                is Either.Success -> {
+                    service.saveAccountId(accountIdResult.data).collectLatest {
+                        when (it) {
+                            is Either.Failure -> trySend(it)
+                            is Either.Success -> trySend(accountIdResult)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

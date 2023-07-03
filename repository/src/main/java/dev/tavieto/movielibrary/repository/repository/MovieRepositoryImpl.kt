@@ -50,11 +50,19 @@ internal class MovieRepositoryImpl(
         return channelFlow {
             val localMovies = local.getFavoriteMovies()
             val lastPage = local.getLastPage().first()
-            val sessionId = authLocal.getUser().first()?.tmdbSessionId ?: ""
-            if (localMovies.isEmpty()) {
+            val user = authLocal.getUser().first()
+            val sessionId = user?.tmdbSessionId
+            val accountId = user?.tmdbAccountId
+
+            if (
+                localMovies.isEmpty()
+                    .and(sessionId.isNullOrBlank().not())
+                    .and(accountId != null)
+            ) {
                 remote.getFavoriteMovieList(
                     page = lastPage + 1,
-                    sessionId = sessionId
+                    sessionId = sessionId!!,
+                    accountId = accountId!!
                 ).collectLatest { result ->
                     trySend(
                         result.mapCatching {
@@ -97,11 +105,14 @@ internal class MovieRepositoryImpl(
         movieId: Int,
         isFavorite: Boolean
     ): Flow<Either<Unit>> = channelFlow {
-        val sessionId = authLocal.getUser().first()?.tmdbSessionId ?: ""
+        val user = authLocal.getUser().first()
+        val sessionId = user?.tmdbSessionId ?: ""
+        val accountId = user?.tmdbAccountId ?: -1
         val result = remote.updateFavoriteMovie(
             isFavorite = isFavorite,
             sessionId = sessionId,
-            movieId = movieId
+            movieId = movieId,
+            accountId = accountId
         )
 
         result.collectLatest {

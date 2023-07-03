@@ -4,7 +4,6 @@ import dev.tavieto.movielibrary.core.commons.base.Either
 import dev.tavieto.movielibrary.core.commons.base.runCatchSuspendData
 import dev.tavieto.movielibrary.data.remote.model.MoviesResponse
 import dev.tavieto.movielibrary.data.remote.service.MovieService
-import dev.tavieto.movielibrary.data.server.BuildConfig
 import dev.tavieto.movielibrary.data.server.core.NetworkWrapper
 import dev.tavieto.movielibrary.data.server.model.FavoriteMediaServerRequest
 import dev.tavieto.movielibrary.data.server.model.mapToRemote
@@ -35,13 +34,14 @@ internal class MovieServiceImpl(
 
     override suspend fun getFavoriteMovieList(
         page: Int,
-        sessionId: String
+        sessionId: String,
+        accountId: Int
     ): Flow<Either<MoviesResponse>> = flow {
         emit(
             runCatchSuspendData {
                 NetworkWrapper {
                     service.getFavoriteMovies(
-                        accountId = BuildConfig.TMDB_ACCOUNT_ID,
+                        accountId = accountId,
                         page = page,
                         language = "pt-BR",
                         sortedBy = "created_at.asc",
@@ -55,12 +55,13 @@ internal class MovieServiceImpl(
     override suspend fun postFavoriteMovie(
         isFavorite: Boolean,
         sessionId: String,
-        movieId: Int
+        movieId: Int,
+        accountId: Int
     ): Flow<Either<Unit>> = flow {
         val result = runCatchSuspendData {
             NetworkWrapper {
                 service.postFavoriteMovie(
-                    accountId = BuildConfig.TMDB_ACCOUNT_ID,
+                    accountId = accountId,
                     sessionId = sessionId,
                     favorite = FavoriteMediaServerRequest(
                         favorite = isFavorite,

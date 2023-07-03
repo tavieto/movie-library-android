@@ -8,4 +8,5 @@ interface AuthLocalDataSource {
     suspend fun saveSessionId(sessionId: String)
     suspend fun getUser(): Flow<UserData?>
     suspend fun deleteUser()
+    suspend fun saveAccountId(accountId: Int)
 }

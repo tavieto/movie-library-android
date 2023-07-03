@@ -7,12 +7,12 @@ import dev.tavieto.movielibrary.domain.auth.repository.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
-class SaveRequestIdUseCase(
+class GetTmbdAccountInfoUseCase(
     scope: CoroutineScope,
     private val repository: AuthRepository
 ) : UseCase<String, Unit>(scope) {
     override suspend fun run(params: String?): Flow<Either<Unit>> {
         return if (params == null) throw MissingParamsException()
-        else repository.saveSessionId(params)
+        else repository.getTmbdAccountInfo(params)
     }
 }

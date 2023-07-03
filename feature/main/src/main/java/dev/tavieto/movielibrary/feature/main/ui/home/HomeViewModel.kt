@@ -97,6 +97,9 @@ class HomeViewModel(
                 }
             },
             onFailure = {
+                getMovies()
+                getNowPlayingMovies()
+                getFavoriteMovies()
                 _state.update {
                     it.copy(tmdbRequestToken = null)
                 }
@@ -109,10 +112,14 @@ class HomeViewModel(
             onSuccess = { name ->
                 _state.update { it.copy(userName = name) }
             },
-            onFailure = {
-                _state.update { it.copy(userName = "error") }
-                it.printStackTrace()
+            onFailure = { error ->
+                _state.update { it.copy(userName = "") }
+                error.printStackTrace()
             }
         )
+    }
+
+    fun updateTabIndex(newIndex: Int) {
+        _state.update { it.copy(tabIndex = newIndex) }
     }
 }
