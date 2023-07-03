@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title">Login</string>
-    <string name="label_password">Senha</string>
+    <string name="signup_screen_title">Cadastre-se</string>
     <string name="button_sign_in">Entrar</string>
     <string name="description_navigation_button">Voltar</string>
+    <string name="signup_screen_sing_button">Registrar</string>
+    <string name="signup_screen_error_empty_name">Nome vazio</string>
+    <string name="signup_screen_error_empty_email">E-mail vazio</string>
+    <string name="signup_screen_error_invalid_email">E-mail inválido</string>
+    <string name="signup_screen_error_empty_password">Senha vazia</string>
+    <string name="signup_screen_error_invalid_password_min_char">A senha deve conter 6 caracteres</string>
+    <string name="signup_screen_error_invalid_password_mismatch">As senhas não combinam</string>
+    <string name="signup_screen_error_unknown">Erro desconhecido</string>
+    <string name="signup_screen_error_duplicated_email">E-mail já cadastrado</string>
 </resources>

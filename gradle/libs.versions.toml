@@ -11,7 +11,9 @@ androidxDataStore = "1.0.0"
 androidxLifecycle = "2.5.1"
 androidxNavigationKtx = "2.6.0"
 androidxMultidex = "2.0.1"
+androidxPaging = "3.1.1"
 androidxPreferences = "1.1.1"
+androidxRoom = "2.4.1"
 assertk = "0.24"
 firebaseBom = "29.3.1"
 firebaseUiAuth = "7.2.0"
@@ -48,13 +50,19 @@ androidx-compose-foundation = { group = "androidx.compose.foundation", name = "f
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashScreen" }
 androidx-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxCoreTesting" }
-androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDataStore"}
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDataStore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
 androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "androidxMultidex" }
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigationKtx" }
 androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "androidxNavigationKtx" }
+androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidxPaging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version = "1.0.0-alpha18" }
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "androidxPreferences" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidxRoom" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version = "2.4.1" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk-jvm", version.ref = "assertk" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx" }

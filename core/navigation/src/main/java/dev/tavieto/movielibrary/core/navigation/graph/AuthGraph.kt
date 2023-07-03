@@ -40,6 +40,6 @@ private fun NavGraphBuilder.addSignUpScreen() {
     composable(
         route = AuthRoutes.SignUp.createRoute()
     ) {
-        SignUpScreen()
+        SignUpScreen(getViewModel())
     }
 }

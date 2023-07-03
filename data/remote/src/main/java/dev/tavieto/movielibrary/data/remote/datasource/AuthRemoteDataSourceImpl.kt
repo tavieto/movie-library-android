@@ -3,41 +3,85 @@ package dev.tavieto.movielibrary.data.remote.datasource
 import dev.tavieto.movielibrary.core.commons.base.Either
 import dev.tavieto.movielibrary.core.commons.base.mapCatching
 import dev.tavieto.movielibrary.data.remote.service.AuthService
+import dev.tavieto.movielibrary.data.remote.service.TmbdService
 import dev.tavieto.movielibrary.repository.datasource.remote.AuthRemoteDataSource
 import dev.tavieto.movielibrary.repository.model.UserData
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
 
 internal class AuthRemoteDataSourceImpl(
-    private val service: AuthService
-): AuthRemoteDataSource {
+    private val service: AuthService,
+    private val tmdb: TmbdService
+) : AuthRemoteDataSource {
 
-    @ExperimentalCoroutinesApi
     override suspend fun signIn(
         email: String,
         password: String
-    ): Flow<Either<UserData>> {
-        return service.signIn(email, password).mapLatest {
-            it.mapCatching { user ->
-                UserData(
-                    id = user.id,
-                    name = user.name,
-                    email = user.email,
-                    imageURL = user.imageURL,
-                    favoriteMoviesID = user.favoriteMoviesID
-                )
-            }
+    ): Flow<Either<UserData>> = channelFlow {
+        service.signIn(email, password).collectLatest {
+            trySend(
+                it.mapCatching { user ->
+                    user.mapToRepository()
+                }
+            )
         }
+        awaitClose()
     }
 
-    override suspend fun signUp() {
-        TODO("Not yet implemented")
+    override suspend fun signUp(
+        name: String,
+        email: String,
+        password: String
+    ): Flow<Either<UserData>> = channelFlow {
+        service.signUp(name, email, password).collectLatest {
+            trySend(it.mapCatching { user -> user.mapToRepository() })
+        }
+        awaitClose()
     }
 
     override suspend fun signOut(): Flow<Either<Unit>> {
         return service.signOut()
     }
 
+    override suspend fun getRequestToken(): Flow<Either<String>> {
+        return tmdb.getRequestToken()
+    }
+
+    override suspend fun getSessionId(requestToken: String): Flow<Either<String>> = channelFlow {
+        tmdb.getSessionId(requestToken = requestToken).collectLatest { result ->
+            if (result is Either.Success) {
+                service.saveSessionId(result.data).collectLatest {
+                    trySend(
+                        when (it) {
+                            is Either.Success -> Either.Success(result.data)
+                            is Either.Failure -> it
+                        }
+                    )
+                }
+            } else {
+                trySend(result)
+            }
+        }
+        awaitClose()
+    }
+
+    override suspend fun getAccountId(
+        sessionId: String
+    ): Flow<Either<Int>> = channelFlow {
+        tmdb.getAccountId(sessionId).collectLatest { accountIdResult ->
+            when (accountIdResult) {
+                is Either.Failure -> trySend(accountIdResult)
+                is Either.Success -> {
+                    service.saveAccountId(accountIdResult.data).collectLatest {
+                        when (it) {
+                            is Either.Failure -> trySend(it)
+                            is Either.Success -> trySend(accountIdResult)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

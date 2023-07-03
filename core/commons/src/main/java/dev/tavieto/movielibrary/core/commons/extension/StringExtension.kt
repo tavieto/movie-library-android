@@ -1,8 +1,10 @@
 package dev.tavieto.movielibrary.core.commons.extension
 
 import dev.tavieto.movielibrary.core.commons.enums.RegexEnum
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-private const val MIN_CHAR = 8
+private const val MIN_CHAR = 6
 
 fun String.isFullName() = RegexEnum.FULL_NAME.match(this)
 fun String.isNotFullName() = isFullName().not()
@@ -25,7 +27,6 @@ fun String.hasSpecialChars() = RegexEnum.PASSWORD_SPECIAL_CHARACTERS.match(this)
 fun String.hasNotSpecialChars() = hasSpecialChars().not()
 fun String.hasMinCharPassword() = this.length >= MIN_CHAR
 fun String.hasNotMinCharPassword() = hasMinCharPassword().not()
-
 fun String.hasMinLength(minLength: Int = 8) = this.length >= minLength
 fun String.hasNotMinLength(minLength: Int = 8) = this.hasMinLength(minLength).not()
 
@@ -87,4 +88,12 @@ fun String.clearMask(mask: String): String {
     } catch (e: Exception) {
         return this
     }
+}
+
+// TODO("WIP - I have to done this extension to convert date formats.")
+fun String.formatDate(pattern: String = "yyyy-MM-dd", to: String = "dd/MM/yyyy"): String {
+    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    val date = dateFormat.parse(this)
+    val stringDateFormat = SimpleDateFormat(to, Locale.getDefault())
+    return stringDateFormat.format(date)
 }

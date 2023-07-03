@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="upcoming_movie_list_type_name">Em breve</string>
+    <string name="now_playing_movie_list_type_name">Em cartaz</string>
+    <string name="popular_movie_list_type_name">Popular</string>
+    <string name="top_rated_movie_list_type_name">Melhores avaliados</string>
+    <string name="home_screen_welcome">Bem-vindo(a)</string>
+</resources>

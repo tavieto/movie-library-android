@@ -25,10 +25,14 @@ android {
 dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:uikit"))
+    implementation(project(":core:commons"))
+    implementation(project(":core:core"))
     implementation(project(":data:firebase"))
     implementation(project(":data:local"))
     implementation(project(":data:remote"))
+    implementation(project(":data:server"))
     implementation(project(":domain:auth"))
+    implementation(project(":domain:movie"))
     implementation(project(":repository"))
 
     implementation(libs.androidx.core.ktx)
@@ -40,6 +44,9 @@ dependencies {
     implementation(libs.firebase.analytics.ktx)
     implementation(libs.firebase.crashlytics.ktx)
     implementation(libs.firebase.perf.ktx)
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.5.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
 
     testImplementation(libs.junit)
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.5'

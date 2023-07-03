@@ -1,6 +1,8 @@
 package dev.tavieto.movielibrary.app
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,26 +12,51 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import dev.tavieto.movielibrary.core.uikit.theme.MovieLibraryTheme
 import dev.tavieto.movielibrary.core.navigation.AppNavigation
 import dev.tavieto.movielibrary.core.navigation.manager.NavigationCommand
 import dev.tavieto.movielibrary.core.navigation.manager.NavigationManager
 import dev.tavieto.movielibrary.core.navigation.manager.NavigationType
 import dev.tavieto.movielibrary.core.navigation.routes.AuthRoutes
 import dev.tavieto.movielibrary.core.navigation.routes.MainRoutes
+import dev.tavieto.movielibrary.core.uikit.theme.MovieLibraryTheme
 import dev.tavieto.movielibrary.data.local.manager.LocalSessionManager
 import dev.tavieto.movielibrary.data.local.manager.SessionState
+import dev.tavieto.movielibrary.domain.auth.usecase.GetTmbdAccountInfoUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity(), KoinComponent {
 
     private val navManager: NavigationManager by inject()
     private val localSessionManager: LocalSessionManager by inject()
+    private val getTmbdAccountInfoUseCase: GetTmbdAccountInfoUseCase by inject {
+        parametersOf(lifecycleScope + Dispatchers.IO)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val requestId = intent?.data?.getQueryParameter("request_token")
+        getTmbdAccountInfoUseCase(
+            params = requestId,
+            onSuccess = {
+                runOnUiThread {
+                    Toast.makeText(this, "TMDB - connected", Toast.LENGTH_SHORT).show()
+                }
+            },
+            onFailure = {
+                runOnUiThread {
+                    Toast.makeText(this, "TMDB - error connection", Toast.LENGTH_SHORT).show()
+                }
+                it.printStackTrace()
+            }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

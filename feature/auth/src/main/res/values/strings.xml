@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title">Sign-in</string>
-    <string name="label_email" translatable="false">E-mail</string>
-    <string name="label_password">Password</string>
     <string name="button_sign_in">Sign-in</string>
     <string name="description_navigation_button">Navigate back</string>
+    <string name="signup_screen_title">Sign-up</string>
+    <string name="signup_screen_sing_button">Join</string>
+    <string name="signup_screen_error_empty_name">Empty name</string>
+    <string name="signup_screen_error_empty_email">Empty e-mail</string>
+    <string name="signup_screen_error_invalid_email">Invalid e-mail</string>
+    <string name="signup_screen_error_empty_password">Empty password</string>
+    <string name="signup_screen_error_invalid_password_min_char">Password must have 6 characters</string>
+    <string name="signup_screen_error_invalid_password_mismatch">Password don\'t matches</string>
+    <string name="signup_screen_error_duplicated_email">User already registered</string>
+    <string name="signup_screen_error_unknown">Unknown error</string>
 </resources>

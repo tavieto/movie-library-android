@@ -4,6 +4,6 @@ data class UserData(
     val id: String,
     val name: String,
     val email: String,
-    val imageURL: String,
-    val favoriteMoviesID: List<String>
+    val tmdbSessionId: String?,
+    val tmdbAccountId: Int?
 )

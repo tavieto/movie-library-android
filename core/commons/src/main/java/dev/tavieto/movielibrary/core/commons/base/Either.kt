@@ -55,6 +55,14 @@ fun <T> runCatchData(block: () -> T): Either<T> {
     }
 }
 
+suspend fun <T> runCatchSuspendData(block: suspend () -> T): Either<T> {
+    return try {
+        Either.Success(block())
+    } catch (error: Throwable) {
+        Either.Failure(error)
+    }
+}
+
 suspend fun <T> Flow<Either<T>>.collectData(
     onSuccess: (T) -> Unit = {},
     onFailure: (Throwable) -> Unit = {}

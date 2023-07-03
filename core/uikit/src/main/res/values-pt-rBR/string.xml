@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email_label">E-mail</string>
+    <string name="name_label">Nome</string>
+    <string name="password_label">Senha</string>
+    <string name="confirm_password_label">Confirme a senha</string>
+</resources>
