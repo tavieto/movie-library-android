@@ -10,7 +10,6 @@ interface MovieRepository {
 
     suspend fun getFavoriteMovieList(page: Int): Flow<Either<MovieListDomain>>
     suspend fun getNowPlayingMovieList(page: Int): Flow<Either<MovieListDomain>>
-
     suspend fun updateFavoriteMovie(
         movieId: Int,
         isFavorite: Boolean

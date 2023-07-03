@@ -62,7 +62,7 @@ internal class MovieRepositoryImpl(
                             for (movie in it) {
                                 local.updateFavoriteMovies(movie.id, isFavorite = true)
                             }
-                            local.getMovies().mapToDomain()
+                            local.getFavoriteMovies().mapToDomain()
                         }
                     )
                 }
@@ -107,6 +107,7 @@ internal class MovieRepositoryImpl(
         result.collectLatest {
             if (it is Either.Success) {
                 local.updateFavoriteMovies(movieId, isFavorite)
+                trySend(it)
             }
         }
     }

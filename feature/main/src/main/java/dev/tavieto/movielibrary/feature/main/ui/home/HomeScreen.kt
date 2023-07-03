@@ -54,7 +54,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
     val state by viewModel.state.collectAsState()
     val activity = LocalContext.current as Activity
     val tabsText = remember {
-        mutableStateListOf("Em cartaz", "Que existem", "Favoritos")
+        mutableStateListOf("Em cartaz", "Filmes", "Favoritos")
     }
     var tabIndex by remember {
         mutableStateOf(0)

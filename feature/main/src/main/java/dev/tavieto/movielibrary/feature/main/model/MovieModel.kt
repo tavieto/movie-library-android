@@ -13,7 +13,7 @@ data class MovieModel(
     val releaseDate: String,
     val title: String,
     val voteAverage: Double,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean
 ) : Parcelable
 
 internal fun MovieDomain.mapFromDomain(): MovieModel {
@@ -23,6 +23,7 @@ internal fun MovieDomain.mapFromDomain(): MovieModel {
         posterPath = BuildConfig.TMDB_API_BASE_URL_IMAGES + this.posterPath,
         releaseDate = this.releaseDate,
         title = this.title,
-        voteAverage = this.voteAverage
+        voteAverage = this.voteAverage,
+        isFavorite = this.isFavorite
     )
 }
