@@ -33,6 +33,10 @@ internal class MovieLocalDataSourceImpl(
         dao.updateFavoriteMovies(movieId, isFavorite)
     }
 
+    override fun updateNowPlayingMovies(movieId: Int, nowPlaying: Boolean) {
+        dao.updateNowPlayingMovies(movieId, nowPlaying)
+    }
+
     override fun getMovies(): MoviesData {
         return dao.getMovies().mapToRepository()
     }
@@ -41,11 +45,19 @@ internal class MovieLocalDataSourceImpl(
         return dao.getFavoriteMovies().mapToRepository()
     }
 
+    override fun getNowPlayingMovies(): MoviesData {
+        return dao.getNowPlayingMovies().mapToRepository()
+    }
+
     override fun getLastPage(): Flow<Int> {
         return context.movieDataStore.data.map { preferences ->
 
             return@map preferences[MovieKeys.pageCount] ?: return@map 0
         }
+    }
+
+    override fun resetNowPLayingMark() {
+        dao.updateNowPlayingMark(nowPlaying = false)
     }
 
     override suspend fun deleteAll() {

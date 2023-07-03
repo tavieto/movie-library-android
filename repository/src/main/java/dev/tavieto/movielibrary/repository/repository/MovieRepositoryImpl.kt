@@ -92,8 +92,10 @@ internal class MovieRepositoryImpl(
             ).collectLatest { result ->
                 trySend(
                     result.mapCatching {
+                        local.resetNowPLayingMark()
                         local.saveMovies(it)
-                        it.mapToDomain()
+                        it.forEach { movie -> local.updateNowPlayingMovies(movie.id, true) }
+                        local.getNowPlayingMovies().mapToDomain()
                     }
                 )
             }

@@ -17,11 +17,17 @@ interface MovieDao {
     @Query(value = "SELECT * FROM movies WHERE is_favorite")
     fun getFavoriteMovies(): List<MovieEntity>
 
+    @Query(value = "SELECT * FROM movies WHERE now_playing")
+    fun getNowPlayingMovies(): List<MovieEntity>
+
     @Query(value = "UPDATE movies SET is_favorite = :isFavorite WHERE id = :movieId")
     fun updateFavoriteMovies(movieId: Int, isFavorite: Boolean)
 
-    @Query(value = "UPDATE movies SET now_playing = false")
-    fun deleteNowPlayingMark()
+    @Query(value = "UPDATE movies SET now_playing = :nowPlaying WHERE id = :movieId")
+    fun updateNowPlayingMovies(movieId: Int, nowPlaying: Boolean)
+
+    @Query(value = "UPDATE movies SET now_playing = :nowPlaying")
+    fun updateNowPlayingMark(nowPlaying: Boolean = false)
 
     @Query(value = "DELETE FROM movies")
     fun deleteAll()
