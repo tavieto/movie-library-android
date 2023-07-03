@@ -8,7 +8,7 @@ Também será necessário o arquivo secrets.properties na raiz do projeto conten
 
 <ul>
   <li>TMDB_URL_AUTH</li>
-<li>TMDB_API_BASE</li>,
-<li>TMDB_API_BASE_URL_IMAGES</li>,
+<li>TMDB_API_BASE</li>
+<li>TMDB_API_BASE_URL_IMAGES</li>
 <li>TMDB_READ_TOKEN</li>
 </ul>
